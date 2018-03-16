@@ -1,5 +1,8 @@
 .ssh
+.vim
+.zsh
 .history
+.viminfo
 *.swp
 .*.swp
 .DS_Store
