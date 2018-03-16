@@ -1,7 +1,5 @@
 .ssh
 .history
-README.md
-*
 *.swp
 .*.swp
 .DS_Store
