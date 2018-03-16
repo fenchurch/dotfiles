@@ -1,0 +1,5 @@
+[user]
+	name = Rusty Gibbs
+	email = rusty@wickedidol.com
+[core]
+	excludesfile = /Users/rusty/.gitignore_global
