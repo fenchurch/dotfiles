@@ -13,15 +13,15 @@ syntax enable
 set grepprg=grep\ -nH\ $*
 " In many terminal emulators the mouse works just fine, thus enable it.
 set mouse=a
+set backspace=indent,eol,start
 "backups in one place
-"set nobackup        "no backup files
-"set nowritebackup  "only in case you don't want a backup file while editing
-"set noswapfile     "no swap files
-set backup
+set nobackup        "no backup files
+set nowritebackup  "only in case you don't want a backup file while editing
+set noswapfile     "no swap files
+"set backup
 set backupdir=/tmp,.
 set directory=/tmp,.
 set undodir=/tmp,.
-
 "chdir on file open
 set autochdir
 " Who doesn't like autoindent?
@@ -52,8 +52,7 @@ set nohidden
 set laststatus=2
 set statusline=%F%m%r%h%w\ (%{&ff}){%Y}\ [%l,%v][%p%%]
 "set the default shell
-"set clipboard=unnamed
-
+set clipboard=unnamed
 " colors & look
 hi FoldColumn           ctermfg=2   ctermbg=233   cterm=none
 hi Search               ctermfg=3   ctermbg=0     cterm=none
@@ -83,10 +82,9 @@ else
 endif
 
 autocmd InsertEnter,InsertLeave * set cul!    
-autocmd InsertEnter * hi CursorLine term=underline gui=underline cterm=underline
-autocmd InsertLeave * hi CursorLine term=none gui=none cterm=none
+autocmd InsertEnter * hi CursorLine term=underline gui=underline cterm=underline 
+autocmd InsertLeave * hi CursorLine term=none gui=none cterm=none ctermbg=0 
 
-set cul                                          
 "highlight current line
 "hi CursorLine term=underline cterm=none ctermbg=3
 
@@ -112,6 +110,8 @@ nmap JJ <Nop>
 imap <F6> <Esc>l
 nmap <F6> i
 vmap <F6> <Esc>i
+cmap <F6> <Esc>
+omap <F6> <Esc>
 "endif
 "indenting, normal, visual and inserttoggle
 nmap //// :noh<CR>
@@ -125,16 +125,24 @@ imap <D-[> <Esc><<<i>
 imap <D-]> <Esc>>><i>
 "source the current script
 nmap <D-r> <Esc>:w<CR>:! "%:p"<CR>
-"nmap <C-r> <Esc>:w<CR>:! "%:p"<CR>
+nmap <F7> <D-r>
+
+nmap <D-R> ^y$:! <C-r>"<CR>
+nmap <F8> <D-R>
+
 imap <D-r> <Esc>:w<CR>:! "%:p"<CR>
-"imap <C-r> <Esc>:w<CR>:! "%:p"<CR>
+imap <F7> <D-r>
+imap <F8> <D-r>
+
 "run selected text as command
 vmap <D-r> y:! <C-r>"<CR>
+vmap <F7> <D-r>
 vmap <D-R> y:! echo <C-r>"<CR>
+vmap <F8> <D-R>
 
-vmap ' xi'<C-r>"'
-vmap " xi"<C-r>""
-vmap ( xi(<C-r>")
+vmap ' xa'<C-r>"'
+vmap " xa"<C-r>""
+vmap ( xa(<C-r>")
 
 nmap <D-'> ciW'<C-r>"'
 nmap <D-'> ciW'<C-r>"'
