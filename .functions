@@ -1,5 +1,3 @@
-#!/bin/bash
-
 #file line functions
 readline() { sed "${1}q;d" "$2"; }
 deleteline() { sed -ie ${1}d "$2"; }
@@ -8,8 +6,8 @@ replaceline(){ sed -ie "${1}s/.*/${2}/" "$3"; }
 mcd () { mkdir -p "$1" && cd "$1"; }
 # colors #
 ##########
-green(){ echo -e "\e[32m$@\e[39m";}
-yellow(){echo -e "\e[33m$@\e[39m";}
+green(){ echo -e "\033[35m$@\033[39m"; }   
+yellow(){ echo -e "\e[33m$@\e[39m";}
 red(){ echo -e "\e[39m$@\e[39m";}
 underline(){ echo -e "\e4m$@\e[24m";}
 bold(){ echo -e "\e[1m$@\e[21m"; }
@@ -21,7 +19,15 @@ ping0(){ for ip in ${@#*@}; do ping -c 1 -W 1 $ip 1>&- && echo "$ip" || :; done;
 ping1(){ ping -c 1 -W 1 ${@#*@} 1>&- && ( echo "$@ pinged"; return 0) || return 1; }
 ip4() { ping -c 1 -t 1 "$1" | grep -Eo -m 1 '([0-9]{1,3}\.){3}[0-9]{1,3}'; }
 
-readssl(){ openssl x509 -in "$@" -text; }
+readssl(){ 
+    if [ -e "$@" ]; then
+    #read from a file
+        openssl x509 -in "$@" -noout -text;
+    else
+    #read from url
+        openssl s_client -showcerts -connect "$@" 
+    fi
+}
 
 # OSX Stuff #
 #############
@@ -77,10 +83,70 @@ vpn () {
     fi
 }
 
-wrenewdhcp(){ 
+renewdhcp(){
     if sudo networksetup -setbootp "${1:-Ethernet}"; then 
         sudo networksetup -setdhcp "${1:-Ethernet}"
     fi
 }
 # ql:           Opens any file in MacOS Quicklook Preview
-ql () { qlmanage -p "$*" >& /dev/null; }    
+ql () { 
+    qlmanage -p "$@" >& /dev/null;
+}
+machineInfo() {
+    if [[ $1 == "-v" ]]; then
+        #display some computer info at login, store it in /tmp cuz it takes a second
+        for i in Hardware Software Displays Memory; do 
+            [ -e /tmp/$i ] && : ||\
+                system_profiler SP${i}DataType 2>&- > /tmp/$i;
+        done
+
+        model=$(awk '/Model Identifier/ {print $3}' /tmp/Hardware)
+        serial=$(awk '/Serial Number \(system\)/ {print $4}' /tmp/Hardware)
+        os=$(awk "/System Version/" /tmp/Software | sed -e 's/.*: \(.*\)(.*/\1/g')
+        cpu=$(sysctl -n machdep.cpu.brand_string)
+        ram="$(( $(sysctl -n hw.memsize) / 1024**3 ))GB Ram"
+        gpu=$(for i in Chipset\ Model Bus Type VRAM; do echo -n $(awk "/$i/" /tmp/Displays | sed 's/.*: //g')\ ; done;)
+        net=$(services=`networksetup -listnetworkserviceorder`
+            for i in $( echo $services | grep Device: | sed -e 's/.*Device\: \(.*\))/\1/g'); do
+                info=$( ifconfig $i &>/dev/null && ifconfig $i 2>&- || : )
+                name=$( echo $services | grep "Device: $i" | sed -e 's/.*Port\: \(.*\),.*/\1/g' )    
+                if [[ $(echo $info | awk '/status: / {print $2}') == "active" ]]; then
+                     echo $name\: $(echo $info | awk '/inet / {print $2}')
+                fi
+            done
+        )
+
+        while read line; do echo $line; done <<-EOF
+            $( yellow ${HOST//.local} ) ($model $serial) $os
+            $cpu, $ram
+            $gpu    
+            $net
+EOF
+
+    else
+        echo $( green ${HOST//.local} )
+    fi
+
+    while read line; do echo $line; done <<-EOF
+        Users logged on:
+        $(w -h)
+
+        Machine status :
+        $(uptime)
+
+        $(df -h | grep -v map | grep -v devfs)
+EOF
+
+#
+}
+networkInfo () {
+    for id in `networksetup -listnetworkserviceorder | grep Device: | sed -e 's/.*Device\: \(.*\))/\1/g'`; do
+        info=$( (ifconfig $id > /dev/null) && ifconfig $id || : )
+        if [ -z $id ]; then
+            if [[ $( echo "$info" | awk '/status/ {print $2}' ) == 'active' ]]; then
+                echo "$id-$( echo "$info" | awk '/inet / {print $2}' )"
+            fi
+        fi
+    done
+}
+    

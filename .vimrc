@@ -1,43 +1,42 @@
-" pathogen auto loader
-
-" Necesary  for lots of cool vim things
+"vim not vi
 set nocompatible
-" This shows what you are typing as a command.  I love this!
+" shows what you are typing as a command
 set showcmd
-" no visual bell
-
 " Needed for Syntax Highlighting and stuff
 filetype on
 filetype plugin on
 syntax enable
 set grepprg=grep\ -nH\ $*
-" In many terminal emulators the mouse works just fine, thus enable it.
+source ~/.vim/vundle.vim
+" mouse emulator 
 set mouse=a
-set backspace=indent,eol,start
 "backups in one place
 set nobackup        "no backup files
 set nowritebackup  "only in case you don't want a backup file while editing
 set noswapfile     "no swap files
 "set backup
-set backupdir=/tmp,.
-set directory=/tmp,.
-set undodir=/tmp,.
+set backupdir=/tmp
+set directory=/tmp
+set undodir=/tmp
 "chdir on file open
 set autochdir
+"showmatch
+set showmatch
 " Who doesn't like autoindent?
 set autoindent
 " Spaces are better than a tab character
 set expandtab
 set smarttab
-" Who wants an 8 character tab?  Not me!
 " Google Indentation (2)
 set shiftwidth=4
 set softtabstop=4
+" backspace across lines
+set backspace=indent,eol,start
 " Cool tab completion stuff
 set wildmenu
 set wildmode=list:longest,full
 " Line Numbers PWN!
-set nu
+set number
 " Ignoring case is a fun trick
 set ignorecase
 " And so is Artificial Intellegence!
@@ -53,6 +52,19 @@ set laststatus=2
 set statusline=%F%m%r%h%w\ (%{&ff}){%Y}\ [%l,%v][%p%%]
 "set the default shell
 set clipboard=unnamed
+
+set fillchars=fold:-
+set foldcolumn=2
+set foldenable
+"set foldmethod=indent
+set foldlevel=99
+"--------------------------------------------------------------------------------
+"    Coloring
+"--------------------------------------------------------------------------------
+" Favorite Color Scheme
+colorscheme solarized
+set background=dark
+
 " colors & look
 hi FoldColumn           ctermfg=2   ctermbg=233   cterm=none
 hi Search               ctermfg=3   ctermbg=0     cterm=none
@@ -62,38 +74,29 @@ hi StatusLineNC         ctermfg=1  ctermbg=233   cterm=none
 hi LineNr               ctermbg=235
 hi Comment              ctermfg=245 ctermbg=235 cterm=none
 
-set fillchars=fold:-
-set foldcolumn=2
-set foldenable
-"set foldmethod=indent
-set foldlevel=99
-
-" Favorite Color Scheme
 if has("gui_running")
-    set background=dark
     " Remove Toolbar
-    colorscheme solarized
     set guioptions-=T
     set gfn=Inconsolata:h14
     set transparency=2
 else
-    set background=dark
-    colorscheme solarized
+"its what UL is
+    nmap f w
 endif
 
+set cul
+set cul!
 autocmd InsertEnter,InsertLeave * set cul!    
 autocmd InsertEnter * hi CursorLine term=underline gui=underline cterm=underline 
 autocmd InsertLeave * hi CursorLine term=none gui=none cterm=none ctermbg=0 
-
-"highlight current line
-"hi CursorLine term=underline cterm=none ctermbg=3
-
+"--------------------------------------------------------------------------------
+"    Mappings
+"--------------------------------------------------------------------------------
 "dup this line
 nmap <D-P> ^v$y<esc>Pj
 nmap <C-P> <D-P> 
 nmap <D-V> <D-P> 
 nmap <C-V> <D-P>
-
 
 "map command left and right for nongui 
 nmap <Char-0x01> ^
@@ -105,16 +108,15 @@ imap <Char-0x05> <Esc>$i
 imap jj <Esc>
 vmap JJ <Esc>
 nmap JJ <Nop>
-"if has("gui_running")
-    "map capslock to F16 with karibener and F16 to insert/normal mode
+"map capslock to F6 with karibener and F6 to insert/normal mode
 imap <F6> <Esc>l
 nmap <F6> i
 vmap <F6> <Esc>i
 cmap <F6> <Esc>
 omap <F6> <Esc>
-"endif
-"indenting, normal, visual and inserttoggle
+
 nmap //// :noh<CR>
+"indenting, normal, visual and inserttoggle
 nmap <D-[> <<
 nmap <D-]> >>
 vmap <D-[> <gv
@@ -123,42 +125,39 @@ vmap << <gv
 vmap >> >gv
 imap <D-[> <Esc><<<i>
 imap <D-]> <Esc>>><i>
+"commenting: Using filetype to assign before / after comment tags
+vmap //// :call CommentLines()<CR>gv
+vmap ???? :call UncommentLines()<CR>gv
+
 "source the current script
 nmap <D-r> <Esc>:w<CR>:! "%:p"<CR>
-nmap <F7> <D-r>
-
-nmap <D-R> ^y$:! <C-r>"<CR>
-nmap <F8> <D-R>
-
 imap <D-r> <Esc>:w<CR>:! "%:p"<CR>
-imap <F7> <D-r>
-imap <F8> <D-r>
-
-"run selected text as command
+"map to F5 for cli, map terminal command+r to F5 ( ^[ [15~ )
+nmap <F5> <D-r>
+imap <F5> <D-r>
+"run current line in shell
+nmap <D-R> ^y$:! <C-r>"<CR>
+"map to S+F5 for cli, map terminal command+R to S+F5 (^[ [15;2~ )
+nmap <S-F5> <D-R>
+imap <S-F5> <D-R>
+"run selected text in shell
 vmap <D-r> y:! <C-r>"<CR>
-vmap <F7> <D-r>
+vmap <F5> <D-r>
+"echo selected text in shell
 vmap <D-R> y:! echo <C-r>"<CR>
-vmap <F8> <D-R>
+vmap <S-F5> <D-R>
 
+"surround words with quotes
 vmap ' xa'<C-r>"'
 vmap " xa"<C-r>""
 vmap ( xa(<C-r>")
-
 nmap <D-'> ciW'<C-r>"'
-nmap <D-'> ciW'<C-r>"'
-
 nmap <D-"> ciW"<C-r>""
 nmap <D-(> ciW(<C-r>")
-"Using filetype to assign before / after comment tags
-vmap //// :call CommentLines()<CR>gv
-vmap ???? :call UncommentLines()<CR>gv
-"cheap alternative
-"vnoremap //// <C-q>I//<Esc>
 nnoremap <D-F1> :split $MYVIMRC<CR>
 nnoremap <S-D-F1> :source $MYVIMRC<CR>
 
 "filetypes
-"zsh-theme etc
 au BufNewFile,BufRead *.zsh* set filetype=sh
 let g:ragtag_global_maps = 1 
 
@@ -172,6 +171,15 @@ nnoremap <leader>e :edit<CR>
 "run this line 
 nmap * ^v$y<esc>:<c-r>"<BS><CR>
 imap <c-8> <esc>^v$y<esc>:<c-r>"<BS><CR>
+
+"--------------------------------------------------------------------------------
+"    
+"--------------------------------------------------------------------------------
+
+
+"--------------------------------------------------------------------------------
+"   Plugin Settings / Mappings 
+"--------------------------------------------------------------------------------
 
 "plugins
 " surround word 

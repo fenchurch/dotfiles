@@ -1,3 +1,5 @@
-PS1="[\u@\h:\w ] $ "
+#brew install bash-git-prompt
 set completion-ignore-case On
-source ~/.profile
+
+source ~/.aliases
+source ~/.functions
