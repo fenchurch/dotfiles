@@ -2,8 +2,7 @@
 
 set -e
 d="$(dirname "$0")";
-
-for file in .vim* .bash* .zsh* .profile; do
+files=( .vim* .bash* .zsh* .functions .aliases )
+for file in "${files[@]}"; do
     ln -s "$(dirname "$0")/$file" ~/
 done
-
