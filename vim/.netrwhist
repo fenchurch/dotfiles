@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_1='/Users/rusty/Dropbox/dotfiles/.zsh'
+let g:netrw_dirhist_2='/Users/rusty'
+let g:netrw_dirhist_3='/users/rusty/Dropbox/dotfiles/.zsh/.oh-my-zsh'
+let g:netrw_dirhist_4='/users/rusty/.zsh'
+let g:netrw_dirhist_5='/Library/LaunchDaemons'
+let g:netrw_dirhist_6='/Users/rusty/Dropbox/DeployStudioScripts'
+let g:netrw_dirhist_7='/Users/rusty/.zsh'

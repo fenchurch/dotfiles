@@ -1,0 +1,109 @@
+#!/bin/bash
+__scriptVersion=1.0
+
+# Function ========================================================   
+#            Name:  systemInfo    
+#     Description:  Display system information
+# ================================================================= 
+usage(){
+    echo "\
+Usage : $0 [options] file
+
+Options:
+-h|help         Display this Message
+-V|version      Display Script Version 
+-v|verbose      Give more verbose system info
+-vv             Even More Verbose
+"
+}
+__fmt(){
+    reset="\033[39m"
+    case $1 in
+        green   | g) format="\033[32m"; shift;;
+        yellow  | y) format="\033[33m"; shift;;
+        red     | r) format="\033[24m"; shift;;
+        underline|u) format="\033[4m"; reset="\033[24m"; shift;;
+        bold    |bd) format="\033[1m"; reset="\033[21m"; shift;;
+        blink   |bn) format="\033[7m"; reset="\033[27m"; shift;;
+    esac
+    echo "$format$@$reset"
+}
+__get(){
+    #argv=searchKey file recordNumber(1) delimitor(:)
+    grep "$1" "$2" | sed "${3:-1}q;d" | cut -f2 -d${4:-:}
+}
+
+storageInfo(){
+    df -PH | grep -v map | grep -v devfs | sed 's/%20/ /g'
+}
+networkInfo () {
+    case `uname` in
+        Darwin ) 
+            networksetup -listnetworkserviceorder | awk '
+                /^\([0-9]+\)/ {$1=""; n=$0; next }
+                /Device: / { sub(/\)/, "", $NF)
+                if($NF != "" && n != "") printf("%s:%s\n", $NF, n); else n=""}
+            ' | while read line; do
+                inet=$( ifconfig ${line%%:*} 2>&- | grep inet\ | cut -f2 -d\  ) 
+                [ ! -z "$inet" ] && echo ${line#*:}:\ $inet || :
+            done;;
+        Linux ) 
+            ip link show | grep -v lo: | awk '/^[0-9]:.*state UP/ {print $2}' | sed -e 's/://g' |\
+            while read if; do
+                echo $if:\ $(ip address show $if | grep inet\  | awk '{print $2}')
+            done
+            ;;
+    esac
+}
+
+hardwareInfo(){
+    if 
+    HOST=${HOST:-$(hostname)}
+    echo -en "$( __fmt g ${HOST//.local} )"
+    if [ $verbosity -ge 2 ]; then
+        #display some computer info at login, store it in /tmp cuz it takes a second
+        for i in Hardware Software Displays Memory; do 
+            [ ! -e /tmp/$i ] && system_profiler SP${i}DataType 2>&- > /tmp/$i;
+        done
+        model=$(awk '/Model Identifier/{print $3}' /tmp/Hardware)
+        serial=$(awk '/Serial Number \(system\)/{print $4}' /tmp/Hardware)
+        os=$(awk "/System Version/" /tmp/Software | sed -e 's/.*: \(.*\)(.*/\1/g')
+        cpu=$(sysctl -n machdep.cpu.brand_string | sed -e 's/(R)//g' -e 's/(TM)//g')
+        ram="$(( $(sysctl -n hw.memsize) / 1024**3 )) GB$(__get Speed /tmp/Memory)$(__get Type /tmp/Memory) RAM"
+        for i in "Chipset Model" "Bus" "Type" "VRAM"; do
+            gpu[$((++g))]=$(__get "$i" /tmp/Displays $(grep Bus: /tmp/Displays | wc -l) )
+        done
+        gpu=${gpu[@]}
+        net="$(networkInfo)"
+        echo -e " ($model $serial) $os\n$cpu\n$ram\n$gpu\n$net"
+    fi
+    if [ $verbosity -ge 1 ]; then echo -e "\n$(storageInfo)"; fi
+}
+linuxInfo(){
+    return
+
+}
+
+main(){
+    case `uname` in
+        Darwin  ) macosInfo;;
+        Linux   ) linuxInfo;;
+    esac
+}
+
+
+verbosity=2
+
+command=0
+while [ ${#@} -ge 1 ]; do
+    case "$1" in
+    --help      | -h) usage; exit 0;;
+    --version   | -V) echo "$0 -- Version $__scriptVersion"; exit 0;;
+    --verbose   | -v) verbosity=1; shift;;
+    --vv            ) verbosity=2; shift;;
+    --vvv           ) verbosity=3; shift;;
+    --network   | -n) networkInfo; command=1; exit;;
+    esac
+done
+
+[ $command -eq 0 ] && main || :

@@ -1,0 +1,18 @@
+#does this comment showup
+coreutils
+moreutils
+findutils
+ffmpeg
+git
+vim --override-system-vi
+imagemagick --with-webp
+p7zip
+libyaml
+macvim
+mp4v2
+openssl
+nginx
+nginx-full
+rtmp-nginx-module
+rsync
+x264

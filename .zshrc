@@ -1,3 +1,4 @@
+#!/bin/zsh
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.zsh
 
@@ -27,7 +28,6 @@ HISTFILE=~/.zsh_history
 export CLICOLOR=true
 # Get color support for 'less'
 export LESS="--RAW-CONTROL-CHARS"
-
 # Use colors for less, man, etc.
 [[ -f ~/.LESS_TERMCAP ]] && . ~/.LESS_TERMCAP
 
