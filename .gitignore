@@ -1,6 +1,4 @@
 .ssh
-.vim
-.zsh
 .history
 .viminfo
 *.swp
