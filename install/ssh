@@ -1,0 +1,17 @@
+#!/bin/bash
+
+killall Dropbox
+sync=~/Dropbox/dotfiles
+user=~
+echo "Symlinking .ssh from Dropbox"
+rm $sync.*{~,swp,bak}
+ln -sf $sync.* $user
+
+if [[ -d $sync/.ssh ]]; then
+    rm -r ~/.ssh
+    mkdir -m 0700 $user/.ssh
+    ln -f $sync/.ssh/* $user/.ssh/
+    chmod 0644 $user/.ssh/*
+    chmod 0600 $user/.ssh/(authorized_keys|*_rsa)
+fi
+open -a Dropbox
