@@ -1,0 +1,10 @@
+#!/bin/bash
+
+green(){ echo "\033[32m$@\033[39m";}
+red(){ echo "\033[31m$@\033[39m";}
+yellow(){ echo "\033[33m$@\033[39m";}
+pink(){ echo "\033[35m$@\033[39m";}
+white(){ echo "\033[97m$@\033[39m";}
+reset(){ echo "\033[0m";}
+
+LS_COLORS="$LS_COLORS:ow=0;033"
