@@ -1,15 +1,18 @@
 #!/usr/bin/env sh
-
 set -e
 d="$(dirname "$0")";
 #cd "$d"
 files=( .vim* .bash* .zsh* .functions .aliases )
 for file in "${files[@]}"; do
-    echo $file;
-    #ln -s "$(dirname "$0")/$file" ~/
+#    echo $file;
+    ln -fs "$(dirname "$0")/$file" ~/
 done
-#if [[ `uname` == "Darwin" ]]; then
-##    source $d/
-#elif [[ `uname` == "Linux" ]]; then
-#    #statements
-#fi
+if [[ `uname` == "Darwin" ]]; then
+    echo "Installing Brew and packages"
+    source "$d/install/brew"
+    echo "Applying preferences"
+    source "$d/.macos"
+elif [[ `uname` == "Linux" ]]; then
+:    #statements
+    echo "Installing Linux Packages"
+fi

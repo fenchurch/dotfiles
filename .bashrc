@@ -3,6 +3,7 @@ set completion-ignore-case On
 sourceFiles=(
 .aliases
 .functions
+.colors
 .profile
 )
 for src in ${sourceFiles[@]}; do 
