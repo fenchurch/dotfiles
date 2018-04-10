@@ -14,11 +14,9 @@ GRN='\e[0;32m'
 RED='\e[0;31m'
 RE='\e[0m'
 BLD='\e[1m'
-ro(){ [ ! -w "$(pwd)" ] && printf "$RED [ro]$RE" || :; }
-
 
 SSH=${SSH_CLIENT:+${SSH_CLIENT%% *}}
+ro(){ [ ! -w "$(pwd)" ] && printf "$RED [ro]$RE" || :; }
 
-\w
 export PS1="\n$GRN\u$RE$SSH@\h:$BLD\e[3m\w$RE\$(ro) \n> ";
 export PS2=">> "

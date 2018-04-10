@@ -1,5 +1,6 @@
 alias s='sudo !!'
-alias ll='ls -FGlAhp'                       # Preferred 'ls' implementation
+alias ls='ls -Ga'
+alias ll='ls -FlAhp'                       # Preferred 'ls' implementation
 alias l='ll'
 alias la='ll -@'                            # Show XAttrs
 alias lr='ls -R | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\'' -e '\''s/^/   /'\'' -e '\''s/-/|/'\'' | less' #recursive

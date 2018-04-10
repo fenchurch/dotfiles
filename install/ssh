@@ -1,17 +1,11 @@
 #!/bin/bash
+# Assuming using dropbox
+ssh=${1:-~/Dropbox/dotfiles/.ssh}
+user=${2:-~}
 
-killall Dropbox
-sync=~/Dropbox/dotfiles
-user=~
-echo "Symlinking .ssh from Dropbox"
-rm $sync.*{~,swp,bak}
-ln -sf $sync.* $user
-
-if [[ -d $sync/.ssh ]]; then
-    rm -r ~/.ssh
-    mkdir -m 0700 $user/.ssh
-    ln -f $sync/.ssh/* $user/.ssh/
-    chmod 0644 $user/.ssh/*
-    chmod 0600 $user/.ssh/(authorized_keys|*_rsa)
+if [ ! -d "$ssh" ]; then 
+    echo "No SSH directory to copy in $ssh";
+else
+    echo "Linking $ssh to $user"
+    ln -s "$ssh" "$user"
 fi
-open -a Dropbox
