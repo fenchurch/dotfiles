@@ -1,6 +1,7 @@
 .ssh
 .history
 .viminfo
+.vim/.netrwhist
 *.swp
 .*.swp
 .DS_Store
