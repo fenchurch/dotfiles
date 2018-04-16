@@ -8,3 +8,21 @@ white(){ echo "\033[97m$@\033[39m";}
 reset(){ echo "\033[0m";}
 
 LS_COLORS="$LS_COLORS:ow=0;033"
+
+colors(){
+    escSeq='\\033' #^ or \\e
+for clbg in {40..47} {100..107} 49 ; do
+	#Foreground
+        echo bg=$clbg
+	for clfg in {30..37} {90..97} 39 ; do
+		#Formatting
+		for attr in 0 1 2 4 7 ; do
+			#Print the result
+			echo -en "\033[${attr};${clbg};${clfg}m [${attr};${clbg};${clfg}m \033[0m"
+		done
+                    echo 
+                    #Newline
+	done
+done
+}
+colors

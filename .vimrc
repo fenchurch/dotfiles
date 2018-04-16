@@ -114,8 +114,8 @@ nmap <D-[> <<
 nmap <D-]> >>
 vmap <D-[> <gv
 vmap <D-]> >gv
-vmap << <gv
-vmap >> >gv
+vmap << <D-[>
+vmap >> <D-]>
 imap <D-[> <Esc><<<i>
 imap <D-]> <Esc>>><i>
 "commenting: Using filetype to assign before / after comment tags
@@ -148,11 +148,9 @@ vmap <S-F5> <D-R>
 vmap ' xa'<C-r>"'
 vmap " xa"<C-r>""
 vmap ( xa(<C-r>")
-vmap < xa<<C-r>">
 nmap <D-'> ciW'<C-r>"'
 nmap <D-"> ciW"<C-r>""
 nmap <D-(> ciW(<C-r>")
-nmap <D-<> ciW<<C-r>">
 
 nnoremap <D-F1> :split $MYVIMRC<CR>
 nnoremap <S-D-F1> :source $MYVIMRC<CR>
@@ -170,7 +168,7 @@ imap <c-8> <esc>^v$y<esc>:<c-r>"<BS><CR>
 "Snippets
 let g:snips_author = 'Rusty Gibbs'
 let g:snips_authorsite = 'http://www.wickedidol.com'
-let g:snips_authorgit = 'https://github.com/fenchurch/'
+let g:snips_authorgit = 'https://github.com/fenchurch'
 "compile less to css
 nnoremap ,m :w <BAR> !lessc % > %:t:r.css<CR><space> "
 "Nerdree window

@@ -1,7 +1,24 @@
 # #!/bin/bash
 snippet #!
 	#!/bin/bash
-	
+
+snippet header
+	#!/bin/bash
+	__scriptVersion=${1:0.1}
+	__scriptPID=$$
+	__scriptPath="$(dirname "\$0")"
+	__scriptFile="$(basename "\$0")"
+
+	# Function ========================================================   
+	#           Name:  `expand('%')`
+	#         Author:  `g:snips_author` 
+	#       Homepage:  `g:snips_authorsite`
+	#            Git:  `g:snips_authorgit`/${2:repo}
+	#    Description:  ${3:functionDescription}
+	#        Created:  `strftime("%Y-%m-%d")`
+	#       Modified:  `strftime("%Y-%m-%d")`
+	# ================================================================= 
+	$0
 snippet if
 	if [[ ${1:condition} ]]; then
 		${2:#statements}
@@ -50,27 +67,7 @@ snippet flags
 	done
 	shift $(( $OPTIND -1 ))
 snippet getopt
-	__scriptVersion=${1:1.0}
-	
-	# Function ========================================================   
-	#            Name:  ${2:functionName}	
-	#     Description:  ${3:functionDescription}
-	# ================================================================= 
-	usage(){
-	    echo << EOF
-	Usage : $${0:0} [options] file
 
-	Options:
-	-h|help	    Display this Message
-	-V|version  Display Script Version
-	-${5:f}|${4:flag}   ${6:Flag Description}
-
-	Examples:
-	${8:Examples of script}
-
-	    EOF
-	}
-	#Flag Options
 	[ -z $(cat) ] && input=1 || input=0
 	while [ ${#@} -gt $input ]; do
 	    case "$${0:1}" in
@@ -85,6 +82,26 @@ snippet getopt
 	}
 
 snippet fun
+	# ${2:function description}
 	${1:function_name}() {
 		${0:# function_body}
 	}
+snippet select
+	${1:options}=(${2:"option"})
+	select opt in "${$1[@]}"; do
+	    case $REPLY in
+		q|n|quit|cancel|exit)
+		    exit;;
+		''|[!0-9] )
+		    echo "Invalid answer, try again...";;
+		[0-9] )
+		    if [ $REPLY -gt ${#$1[@]} ]; then
+			    ${3:sel}="$opt" 
+			    ${4:selIndex}=$(( REPLY-1 ))
+			    break
+		    else
+			    echo "Invalid answer, try again..."
+		    fi;;
+	    esac
+	done
+

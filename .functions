@@ -35,7 +35,6 @@ readssl(){
 
 # OSX Stuff #
 #############
-
 vnc() {
     local conig cred host port timeout
     config=~/.ssh/config

@@ -9,7 +9,7 @@ W="%{${fg[white]}%}"
 Y="%{${fg[yellow]}%}"
 B="%{${fg[blue]}%}"
 K="%{${fg[black]}%}"
-Gr="%{${fg[gray]}%}"
+Gr="\033[7;49;95m"
 RE="%{$reset_color%}"
 
 #timefmt
@@ -67,7 +67,8 @@ function length {
     #clear the formatting
     local cl='%([BSUbfksu]|([FB]|){*})'
     #find string length unformatted
-    echo "${#:-${(S%%)1//$~cl}}"
+    local input=$( echo $1 | sed -e "s,$(echo -e "\e")\[[0-9;]*[a-zA-Z],,g" )
+    echo "${#${(S%%)input//$~cl/}}"
 }
 
 function column {
@@ -93,7 +94,7 @@ function build_prompt() {
     local git="$(git_prompt_info)"
     local err="$R%(?..-> %? <-\n)$RE"
     local dir="${(%):-%~}"
-    local perms="$K$(perms_prompt_info)$RE"
+    local perms="$Gr$(perms_prompt_info)$RE"
     local pr_left=" $git$perms "
     local pr_right=" $time "
     pr_left="$(shorten "$dir" "$pr_left$pr_right" )$pr_left"

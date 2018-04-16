@@ -4,7 +4,7 @@ ZSH=$HOME/.zsh
 
 # Set name of the theme to load.
 # Look in ~/.zsh/themes/
-ZSH_THEME="rusty"
+ZSH_THEME="powerlevel9k/powerlevel9k"
 
 #Comment this out to disable weekly auto-update checks
 DISABLE_AUTO_UPDATE="true"

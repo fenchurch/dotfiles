@@ -1,14 +1,6 @@
 #brew install bash-git-prompt
 set completion-ignore-case On
-sourceFiles=(
-.aliases
-.functions
-.colors
-.profile
-)
-for src in ${sourceFiles[@]}; do 
-    [ -e ~/$src ] && source ~/$src || :
-done
+source .profile
 
 GRN='\e[0;32m'
 RED='\e[0;31m'
