@@ -1,4 +1,5 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_cnt =3
 let g:netrw_dirhist_1='/Users/rusty/Dropbox/dotfiles/.bin'
 let g:netrw_dirhist_2='/Users/rusty/Dropbox/dotfiles/.vim/snippets'
+let g:netrw_dirhist_3='/Users/rusty'

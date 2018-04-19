@@ -33,38 +33,6 @@ readssl(){
     fi
 }
 
-# OSX Stuff #
-#############
-vnc() {
-    local conig cred host port timeout
-    config=~/.ssh/config
-    timeout=1
-    host="${1##*@}"
-    cred="${1%@*}"
-    port=5900
-    if [[ "$host" != "${host%:*}" ]]; then 
-        port=${host%:*}
-        host=${host##*:}
-    fi
-    sshhost=$(awk '/Host '$host'/ { host=1; }
-        /Hostname / && host==1 { 
-            name=$0; 
-            sub(/Hostname /,"",name); 
-            print name;
-            host=0;
-        }
-    ' $config)
-    [[ "$sshhost" != "" ]] && host="$sshhost" || :
-    [[ "$cred" == "$host" ]] && cred="" || cred="$cred@"
-
-    if nc -G$timeout -z $host $port 2>&-; then
-        echo "Opening vnc to $host on port $port"
-        open vnc://"$cred$host:$port"
-    else
-        echo -e "\e[31mVNC port ($port) not open on $host\e[30m"
-        return 1;
-    fi
-}
 #ipsec vpn
 vpn () {
     #store $host, $localIP, $interface and $sharedSecret here

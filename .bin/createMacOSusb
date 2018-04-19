@@ -1,0 +1,53 @@
+#!/bin/bash
+__scriptVersion=1
+__scriptPID=$$
+__scriptPath="$(dirname "0")"
+__scriptFile="$(basename "0")"
+
+# Function ========================================================   
+#           Name:   createMacOSusb
+#         Author:   Rusty Gibbs 
+#       Homepage:   http://www.wickedidol.com
+#            Git:   https://github.com/fenchurch//repo
+#    Description:   Creates Installer media for macOS... because I 
+#                   always forget how to do it 
+#        Created:   2018-04-11
+#       Modified:   2018-04-11
+# ================================================================= 
+
+
+app="${1:-/Applications/Install MacOS High Sierra.app}"
+[[ ! -d "$app" ]] && echo "Cannot find $app" && exit
+
+for line in `diskutil list | grep external | cut -d \  -f1`; do
+    disk="`df -Hl | grep $line | tr -s \  | cut -d\  -f9-`"
+    [[ ! -z $disk ]] && disks+=("$disk")
+done
+
+if [ ${#disks[@]} -lt 1 ]; then 
+    echo "Insert a USB disk and restart this function to create install media. Warning: This will format the disk"
+    exit;
+elif [ $o -eq 1 ]; then
+    echo "Using ${disk[1]}"
+    diskSelected="${disk[1]}"
+else
+    echo "Choose USB Drive to format and install disk" 
+    PS3="Enter your numeric choice (type quit to cancel): "
+
+    select opt in "${disks[@]}"; do 
+        case $REPLY in
+            q | quit | cancel | exit | n ) 
+                exit
+                ;;
+            ''|[!0-9]   ) 
+                echo Invalid answer, try again
+                ;;
+            [0-9]       ) 
+                [ $REPLY -ge ${#disks[@]} ] &&\
+                    echo Invalid answer, try again ||\
+                    diskSelected="$opt" && break
+                ;;
+        esac
+    done
+fi
+sudo "$app/Contents/Resources/createinstallmedia" --volume "$diskSelected"

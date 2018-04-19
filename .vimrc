@@ -78,6 +78,7 @@ if has("gui_running")
 else
 "its what UL is
     nmap f w
+    highlight Normal ctermbg=NONE
 endif
 
 "   Change cursorline in editmode

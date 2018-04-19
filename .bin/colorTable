@@ -1,0 +1,147 @@
+#!/bin/bash
+
+str_len(){
+    #clear the formatting
+    local cl='%([BSUbfksu]|([FB]|){*})'
+    #find string length unformatted
+    local input=$( echo $1 | sed -e "s,$(echo -e "\e")\[[0-9;]*[a-zA-Z],,g" )
+    echo "${#${(S%%)input//$~cl/}}"
+}
+
+##/bin/bash
+#divider===============================
+#divider=$divider$divider
+#
+#header="\n %-10s %8s %10s %11s\n"
+#format=" %-10s %08d %10s %11.2f\n"
+#
+#width=43
+#
+#printf "$header" "ITEM NAME" "ITEM ID" "COLOR" "PRICE"
+#
+#printf "%$width.${width}s\n" "$divider"
+#
+#printf "$format" \
+#Triangle 13  red 20 \
+#Oval 204449 "dark blue" 65.656 \
+#Square 3145 orange .7
+
+textToCol(){
+    #$#=( 1=text, $2=colwidth, $3=left/center/right
+    text="$1"
+    maxWidth=${2:0}
+    align=${3:left}
+    lWhiteSpace=$(( ));
+    rWhiteSpace=$(( ));
+}
+print_table(){
+      for (( r = 0; r < ${#c0[@]}; r++ )); do
+            for (( c = 0; c < $1; c++ )); do
+                case $c in 
+                    0) e="${c0[$r]}";;
+                    1) e="${c1[$r]}";;
+                    2) e="${c2[$r]}";;
+                    3) e="${c3[$r]}";;
+                    4) e="${c4[$r]}";;
+                    5) e="${c5[$r]}";;
+                    6) e="${c6[$r]}";;
+                    7) e="${c7[$r]}";;
+                    8) e="${c8[$r]}";;
+                    9) e="${c9[$r]}";;
+                    *) e="everything else";
+                esac
+                echo -en "$e"
+                [ $c -lt $(( cols -1 )) ] && echo -en "   "
+            done
+            echo
+        done
+        echo
+}
+
+
+col=0
+names=( 
+    "black"
+    "red"
+    "green"
+    "yellow"
+    "blue"
+    "magenta"
+    "cyan"
+    "light gray"
+    "dark gray"
+    "light red"
+    "light green"
+    "light yellow"
+    "light blue" 
+    "light magenta" 
+    "light cyan" 
+    "white"
+    "default"
+)
+namesMaxLen=0;
+colorStrFmt="\033[%s;%s;%sm [%s; \033[0m"
+a=0
+A=0
+
+for i in "${names[@]}"; do [ $namesMaxLen -lt ${#i} ] && namesMaxLen=${#i} || :; done
+for (( i=0; i < ${#names[@]}; i++ )); do
+    names[$i]="${names[$i]}$(printf '%'$(( $namesMaxLen - ${#names[$i]} ))'s')";
+done
+
+cols=$(( $(( $(tput cols)-$namesMaxLen )) / ${#colorStrFmt} ))
+
+    for clfg in {30..37} {90..97} 39 ; do
+    if [ $col -eq 0 ]; then
+        c0=(); c1=(); c2=(); c3=(); c4=(); c5=(); c6=(); c7=(); c8=(); c9=()
+    fi
+    a=0;
+            
+    for clbg in {40..47} {100..107} 49; do
+            #Formatting
+            line=""
+            for attr in 0 1 2 4 5 7 ; do
+                    #Print the result
+                    line+="\033[${attr};${clbg};${clfg}m [${attr}; \033[0m"
+            done
+            line+="${clbg};${clfg}m"
+            case $col in
+                0)  c0[${#c0[@]}]="$line";;
+                1)  c1[${#c1[@]}]="$line";;
+                2)  c2[${#c2[@]}]="$line";;
+                3)  c3[${#c3[@]}]="$line";;
+                4)  c4[${#c4[@]}]="$line";;
+                5)  c5[${#c5[@]}]="$line";;
+                6)  c6[${#c6[@]}]="$line";;
+                7)  c7[${#c7[@]}]="$line";;
+                8)  c8[${#c8[@]}]="$line";;
+                9)  c9[${#c9[@]}]="$line";;
+            esac
+    done
+
+    (( col++ ))
+
+    if [ $col -eq $cols ]; then
+        if [[ -z $header ]]; then
+            for (( c = 0; c < cols; c++ )); do
+                if [ $c -eq 0 ]; then
+                    fg="⇃FG⇂"
+                    bg="BG⇒"
+                    header="$fg$(printf '%'$(( namesMaxLen-${#bg}-${#fg} ))'s')$bg" 
+                fi
+                #header+="$(printf "%$(( $l/2 - ${#n}/2 ))s")$n$(printf "%$(( $l/2 - ${#n}/2 ))s")"
+                #(( A++ ))
+            done
+        fi
+        echo "$header";
+        header="";
+
+        print_table $cols;
+        col=0
+    fi
+done
+if [ $col -gt 0 ]; then
+    print_table $col;
+fi
+
+

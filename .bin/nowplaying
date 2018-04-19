@@ -1,0 +1,10 @@
+#! /bin/bash
+state=`osascript -e 'tell application "Spotify" to player state as string'`;
+if [ $state = "playing" ]; then
+    artist=`osascript -e 'tell application "Spotify" to artist of current track as string'`;
+    track=`osascript -e 'tell application "Spotify" to name of current track as string'`;
+    [ -z "$artist" ] && track="(ad)" || artist="$artist - "
+    echo -en "$artist$track";
+else
+    osascript -e 'tell application "iTunes" to if player state is playing then artist of current track & " - " & name of current track'
+fi
