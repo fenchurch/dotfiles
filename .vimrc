@@ -1,6 +1,4 @@
-"--------------------------------------------------------------------------------
-"
-" Init
+" Init                                                                     {{{
 "--------------------------------------------------------------------------------
 "vim not vi
 set nocompatible
@@ -9,16 +7,15 @@ set showcmd
 " Needed for Syntax Highlighting and stuff
 filetype on
 filetype plugin on
-syntax on 
+syntax on
 set grepprg=grep\ -nH\ $*
 
 "
 "vundle bundles
 set rtp+=~/.vim/bundle/Vundle.vim
 source ~/.vim/vundle.vim
-"
-"-------------------------------------------------------------------------------
-"    File Ops
+"----------------------------------------------------------------------------}}}
+"    File Ops                                                              {{{
 "-------------------------------------------------------------------------------
 set nobackup                                    "no backup files
 set nowritebackup                               "only in case you don't want a backup file while editing
@@ -29,13 +26,14 @@ set directory=/tmp
 set undodir=/tmp
 set autochdir                                   "chdir on file open
 set autoread
-"-------------------------------------------------------------------------------
-"    Options
+"
+"----------------------------------------------------------------------------}}}
+"   Behavior                                                               {{{
 "-------------------------------------------------------------------------------
 set mouse=a
 set showmatch                                   " Braces,quotes,parenthesis
-set autoindent                                  " Indent automatically 
-set expandtab                                   " Spaces>Tabs 
+set autoindent                                  " Indent automatically
+set expandtab                                   " Spaces>Tabs
 set smarttab
 set shiftwidth=4
 set softtabstop=4
@@ -54,26 +52,27 @@ set laststatus=2                                "Status line folder/file[mod] (f
 set statusline=%F%m%r%h%w\ (%{&ff}){%Y}\ [%l,%v][%p%%]
 set clipboard=unnamed                           " Yank to system clipboard
 
-"-------------------------------------------------------------------------------
-"    Folding
-"-------------------------------------------------------------------------------
+set splitbelow splitright                       "Split open location
+" ---------------------------------------------------------------------------}}}
+"    Folding                                                               {{{
+" ----------------------------------------------------------------------------
 
 set fillchars=fold:-                            " foldcolumn stuff
 set foldcolumn=2
 set foldenable
 "set foldmethod=syntax
 set foldlevel=99
-
-"--------------------------------------------------------------------------------
-"    Appearance
-"--------------------------------------------------------------------------------
+"
+"----------------------------------------------------------------------------}}}
+"    Appearance                                                            {{{
+"-------------------------------------------------------------------------------
 colorscheme solarized
 set background=dark
 
 if has("gui_running")
     " Remove Toolbar
     set guioptions-=T
-    set gfn=Inconsolata:h14
+    set guifont=SourceCodePro+Powerline+Awesome\ Regular:h14
     set transparency=2
 else
 "its what UL is
@@ -82,19 +81,21 @@ else
 endif
 
 "   Change cursorline in editmode
-autocmd InsertEnter,InsertLeave * set cul!    
-autocmd InsertEnter * hi CursorLine term=underline gui=underline cterm=underline 
-autocmd InsertLeave * hi CursorLine term=none gui=none cterm=none ctermbg=0 
- 
-"--------------------------------------------------------------------------------
-"    Mappings
-"--------------------------------------------------------------------------------
+au InsertEnter,InsertLeave * set cul!
+au InsertEnter * hi CursorLine term=underline gui=underline cterm=underline
+au InsertLeave * hi CursorLine term=none gui=none cterm=none ctermbg=0
+
+set colorcolumn=80      " Highlight the 80th character limit
+"
+"----------------------------------------------------------------------------}}}
+"    Mappings                                                              {{{
+"-------------------------------------------------------------------------------
 "dup this line
 nmap <D-P> ^v$y<esc>Pj
-nmap <C-P> <D-P> 
-nmap <D-V> <D-P> 
+nmap <C-P> <D-P>
+nmap <D-V> <D-P>
 nmap <C-V> <D-P>
-"map command left and right for nongui 
+"map command left and right for nongui
 nmap <Char-0x01> ^
 nmap <Char-0x05> $
 imap <Char-0x01> <Esc>^i
@@ -111,12 +112,16 @@ cmap <F6> <Esc>
 omap <F6> <Esc>
 nmap //// :noh<CR>
 "indenting, normal, visual and inserttoggle
+nmap <tab> >>
+nmap <S-tab> <<
 nmap <D-[> <<
 nmap <D-]> >>
 vmap <D-[> <gv
 vmap <D-]> >gv
-vmap << <D-[>
-vmap >> <D-]>
+vmap << <gv
+vmap >> >gv
+vmap <tab> >gv
+vmap <S-tab> <gv
 imap <D-[> <Esc><<<i>
 imap <D-]> <Esc>>><i>
 "commenting: Using filetype to assign before / after comment tags
@@ -145,7 +150,7 @@ vmap <F5> <D-r>
 "echo selected text in shell
 vmap <D-R> y:! echo <C-r>"<CR>
 vmap <S-F5> <D-R>
-"surround words 
+"surround words
 vmap ' xa'<C-r>"'
 vmap " xa"<C-r>""
 vmap ( xa(<C-r>")
@@ -160,12 +165,13 @@ nnoremap <S-D-F1> :source $MYVIMRC<CR>
 nnoremap <space> za
 nnoremap <S-space> zM
 vnoremap <space> zO
-"run this line 
+"run this line
 nmap * ^v$y<esc>:<c-r>"<BS><CR>
 imap <c-8> <esc>^v$y<esc>:<c-r>"<BS><CR>
-"--------------------------------------------------------------------------------
-"   Plugin Settings / Mappings 
-"--------------------------------------------------------------------------------
+
+"----------------------------------------------------------------------------}}}
+"   Plugin Settings / Plugin Mappings                                      {{{
+"-------------------------------------------------------------------------------
 "Snippets
 let g:snips_author = 'Rusty Gibbs'
 let g:snips_authorsite = 'http://www.wickedidol.com'
@@ -181,7 +187,5 @@ let php_folding = 1        "Set PHP folding of classes and functions.
 let php_htmlInStrings = 1  "Syntax highlight HTML code inside PHP strings.
 let php_sql_query = 1      "Syntax highlight SQL code inside PHP strings.
 let php_noShortTags = 1    "Disable PHP short tags.
-
-"enable status line always
-set laststatus=2
 let g:AF_foldwidth="full"
+"----------------------------------------------------------------------------}}}
