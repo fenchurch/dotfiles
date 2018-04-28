@@ -1,3 +1,6 @@
 [submodule ".vim/bundle/Vundle.vim"]
 	path = .vim/bundle/Vundle.vim
 	url = https://github.com/VundleVim/Vundle.vim.git
+[submodule ".vim/AutoFold.vim"]
+	path = .vim/AutoFold.vim
+	url = /Users/rusty/.vim/bundle/AutoFold.vim

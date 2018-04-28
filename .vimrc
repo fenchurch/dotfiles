@@ -5,15 +5,17 @@ set nocompatible
 " shows what you are typing as a command
 set showcmd
 " Needed for Syntax Highlighting and stuff
-filetype on
-filetype plugin on
-syntax on
-set grepprg=grep\ -nH\ $*
+filetype off
 
 "
 "vundle bundles
 set rtp+=~/.vim/bundle/Vundle.vim
 source ~/.vim/vundle.vim
+
+filetype on
+filetype plugin on
+syntax on
+set grepprg=grep\ -nH\ $*
 "----------------------------------------------------------------------------}}}
 "    File Ops                                                              {{{
 "-------------------------------------------------------------------------------

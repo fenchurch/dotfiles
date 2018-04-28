@@ -2,7 +2,6 @@
 .history
 .viminfo
 .vim/.netrwhist
-.vim/bundle
 *.swp
 .*.swp
 .DS_Store
