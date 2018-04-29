@@ -1,0 +1,12 @@
+#!/bin/bash
+cd $HOME
+repos=(
+ "https://github.com/VundleVim/Vundle.vim.git"=.vim/bundle/Vundle.vim
+ "https://github.com/bhilburn/powerlevel9k.git"=.zsh/themes/Powerlevel9k
+)
+for repo in "${repos[@]}"; do
+    url=${repo%=*} 
+    loc=${repo##*=}
+    echo Cloning $url to $loc
+    git clone $url $loc
+done
