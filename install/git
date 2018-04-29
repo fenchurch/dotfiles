@@ -1,12 +1,17 @@
 #!/bin/bash
+scriptName=$(basename "$0")
+scriptPath=$(dirname "$0")
+scriptPID=$$
+
 cd $HOME
-repos=(
- "https://github.com/VundleVim/Vundle.vim.git"=.vim/bundle/Vundle.vim
- "https://github.com/bhilburn/powerlevel9k.git"=.zsh/themes/Powerlevel9k
-)
-for repo in "${repos[@]}"; do
-    url=${repo%=*} 
-    loc=${repo##*=}
-    echo Cloning $url to $loc
-    git clone $url $loc
+for file in `uname` all; do
+    echo $file
+    if [[ -f "$0.$file" ]]; then
+        while read line; do
+            url=${line%=*} 
+            loc=${line##*=}
+            echo Cloning $url to $loc
+            git clone $url $loc
+        done < "$0.$file"
+    fi
 done

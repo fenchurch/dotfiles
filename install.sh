@@ -17,8 +17,10 @@ elif [[ `uname` == "Linux" ]]; then
     #statements
     echo "Installing Linux Packages"
 fi
-#install SSH settings and
+
+#install SSH settings and git repos
 source "$d/install/ssh"
+source "$d/install/git"
 
 #install vim vundle plugins "vim +PluginInstall +qall"
 vim +PluginInstall +qall
