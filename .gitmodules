@@ -1,0 +1,6 @@
+[submodule ".zsh/themes/powerlevel9k"]
+	path = .zsh/themes/powerlevel9k
+	url = https://github.com/bhilburn/powerlevel9k.git
+[submodule "Vundle.vim"]
+	path = Vundle.vim
+	url = https://github.com/VundleVim/Vundle.vim.git
