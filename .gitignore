@@ -4,5 +4,6 @@
 .vim/.netrwhist
 *.swp
 .*.swp
+.un~
 .DS_Store
 **/*tmp*

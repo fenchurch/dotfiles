@@ -16,7 +16,7 @@ alias .5='cd ../../../../../'               # Go back 5 directory levels
 alias .6='cd ../../../../../../'            # Go back 6 directory levels
 alias less='less -FSRXc'                    # Preferred 'less' implementation
 alias path='echo -e ${PATH//:/\\n}'         # path:         Echo all executable Paths
-
+alias rmr='sudo rm -r'
 #networking commands
 alias myip='dig +short myip.opendns.com @resolver1.opendns.com' # myip:         Public facing IP Address
 alias netCons='lsof -i'                             # netCons:      Show all open TCP/IP sockets
