@@ -1,8 +1,8 @@
-#!/usr/bin/env sh
+#!/bin/bash
 set -e
 d="$(dirname "$0")";
 cd "$d"
-files=( .vim* .bash* .zsh* .functions .aliases .bin )
+files=( .vim* .bash* .zsh* .functions .aliases .bin)
 for file in "${files[@]}"; do
 #    echo $file;
     ln -fs "$d/$file" ~/
