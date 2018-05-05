@@ -1,0 +1,3 @@
+#/bin/bash
+echo $USER${SSH_CLIENT:+(${SSH_CLIENT%% *})}@$HOSTNAME
+exit

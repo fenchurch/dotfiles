@@ -1,4 +1,4 @@
-sourceFiles=(
+aourceFiles=(
     .aliases
     .functions
 )
