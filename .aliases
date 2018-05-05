@@ -28,11 +28,16 @@ alias ipInfo0='ipconfig getpacket en0'              # ipInfo0:      Get info on 
 alias ipInfo1='ipconfig getpacket en1'              # ipInfo1:      Get info on connections for en1
 alias openPorts='sudo lsof -i | grep LISTEN'        # openPorts:    All listening connections
 alias showBlocked='sudo ipfw list'                  # showBlocked:  All ipfw rules inc/ blocked IPs
+alias ping0='f(){ for i in ${@#*@}; do ping -c 1 -W 1 $i 1>&- && echo "$i" || :; done; }; f'
+alias ping1='f(){ ping -c 1 -W 1 ${@#*@} 1>&- && ( echo "$@ pinged"; return 0) || return 1; }; f'
+alias ip4='f(){ ping -c 1 -t 1 "$1" | grep -Eo -m 1 "([0-9]{1,3}\.){3}[0-9]{1,3}"; }; f'
 
 #osx commands
-alias lc='launchctl'
-alias slc='sudo launchctl'
-alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
-alias sys='syslog | tail -f'
-alias btmm='echo show Setup:/Network/BackToMyMac | scutil | grep $(id -u)\ : | sed "s/.*$(id -u) : \([0-9a-zA-Z\.]*\)\.$/\1/g"'
-alias tm='sudo fs_usage -f filesys backupd'
+if [[ `uname` == "Darwin" ]]; then
+    alias lc='launchctl'
+    alias slc='sudo launchctl'
+    alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+    alias sys='syslog | tail -f'
+    alias btmm='echo show Setup:/Network/BackToMyMac | scutil | grep $(id -u)\ : | sed "s/.*$(id -u) : \([0-9a-zA-Z\.]*\)\.$/\1/g"'
+    alias tm='sudo fs_usage -f filesys backupd'
+fi

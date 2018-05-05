@@ -1,17 +1,20 @@
 #!/bin/bash
-scriptName=$(basename "$0")
-scriptPath=$(dirname "$0")
+#set -e
 scriptPID=$$
+scriptName="$(basename "$0")"
+scriptPath="$( cd "$(dirname "$0")"; pwd -P )"
+script="$scriptPath/$scriptName"
 
-cd $HOME
 for file in `uname` all; do
-    echo $file
     if [[ -f "$0.$file" ]]; then
+	echo "Git: Cloning $file repos"  
         while read line; do
+	    [ -z "$line" ] && continue;
             url=${line%=*} 
             loc=${line##*=}
+	
             echo Cloning $url to $loc
-            git clone $url $loc
+            git clone "$url" "$HOME/$loc"
         done < "$0.$file"
     fi
 done
