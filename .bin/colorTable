@@ -1,4 +1,19 @@
-#/bin/bash
+#!/bin/bash
+__scriptVersion=1.0
+__scriptPID=$$
+__scriptPath="$(cd "$(realpath "$(dirname "$0")"; pwd -P )"
+__scriptFile="$(basename "$0")"
+
+# Function =====================================================================
+#           Name:  colorTable
+#         Author:  Rusty Gibbs 
+#       Homepage:  http://www.wickedidol.com
+#            Git:  https://github.com/fenchurch/dotfiles.git
+#    Description:  Ansi color table
+#        Created:  2018-05-01
+#       Modified:  2018-05-01
+# ==============================================================================
+
 #divider===============================
 #divider=$divider$divider
 #

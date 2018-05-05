@@ -6,18 +6,18 @@ snippet header
 	#!/bin/bash
 	__scriptVersion=${1:0.1}
 	__scriptPID=$$
-	__scriptPath="$(dirname "\$0")"
+	__scriptPath="$(cd "$(realpath "$(dirname "\$0")")"; pwd -P )"
 	__scriptFile="$(basename "\$0")"
 
-	# Function ========================================================   
+	# Function ===================================================================== 
 	#           Name:  `expand('%')`
 	#         Author:  `g:snips_author` 
 	#       Homepage:  `g:snips_authorsite`
-	#            Git:  `g:snips_authorgit`/${2:repo}
+	#            Git:  `g:snips_authorgit`/${2:repo}.git
 	#    Description:  ${3:functionDescription}
 	#        Created:  `strftime("%Y-%m-%d")`
 	#       Modified:  `strftime("%Y-%m-%d")`
-	# ================================================================= 
+	# ==============================================================================
 	$0
 snippet if
 	if [[ ${1:condition} ]]; then

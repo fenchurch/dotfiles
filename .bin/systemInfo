@@ -1,10 +1,19 @@
 #!/bin/bash
-__scriptVersion=1.0
+__scriptVersion=0.1
+__scriptPID=$$
+#__scriptPath="$(cd "$(realpath "$(dirname "$0")"; pwd -P )"
+__scriptFile="$(basename "$0")"
 
-# Function ========================================================   
-#            Name:  systemInfo    
-#     Description:  Display system information
-# ================================================================= 
+# Function ===================================================================== 
+#           Name:  systemInfo
+#         Author:  Rusty Gibbs 
+#       Homepage:  http://www.wickedidol.com
+#            Git:  https://github.com/fenchurch/repo.git
+#    Description:  functionDescription
+#        Created:  2018-05-01
+#       Modified:  2018-05-01
+# ==============================================================================
+
 usage(){
     echo "\
 Usage : $0 [options] file
@@ -56,8 +65,7 @@ networkInfo () {
     esac
 }
 
-hardwareInfo(){
-    if 
+macosInfo(){
     HOST=${HOST:-$(hostname)}
     echo -en "$( __fmt g ${HOST//.local} )"
     if [ $verbosity -ge 2 ]; then
@@ -75,10 +83,17 @@ hardwareInfo(){
         done
         gpu=${gpu[@]}
         net="$(networkInfo)"
-        echo -e " ($model $serial) $os\n$cpu\n$ram\n$gpu\n$net"
+#        if [ -z "$list" ]; then
+          echo -e " ($model $serial) $os\n$cpu\n$ram\n$gpu\n$net"
+#        else
+#            echo
+#        fi
     fi
-    if [ $verbosity -ge 1 ]; then echo -e "\n$(storageInfo)"; fi
+    if [ $verbosity -ge 1 ]; then
+        echo -e "\n$(storageInfo)"; 
+    fi
 }
+
 linuxInfo(){
     return
 
@@ -91,7 +106,7 @@ main(){
     esac
 }
 
-
+list=1;
 verbosity=2
 
 command=0

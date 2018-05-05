@@ -1,1 +1,16 @@
 #!/bin/bash
+__scriptVersion=1.0
+__scriptPID=$$
+__scriptPath="$(cd "$(realpath "$(dirname "$0")"; pwd -P )"
+__scriptFile="$(basename "$0")"
+
+# Function ========================================================   
+#           Name:  user
+#         Author:  Rusty Gibbs 
+#       Homepage:  http://www.wickedidol.com
+#            Git:  https://github.com/fenchurch/repo.git
+#    Description:  User Information for 
+#        Created:  2018-05-01
+#       Modified:  2018-05-01
+# ================================================================= 
+
