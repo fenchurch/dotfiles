@@ -1,0 +1,23 @@
+#!/bin/bash
+__scriptVersion=1.0
+__scriptPID=$$
+__scriptPath="$(cd "$(realpath "$(dirname "$0")")"; pwd -P )"
+__scriptFile="$(basename "$0")"
+
+# Function ===================================================================== 
+#           Name:  context
+#         Author:  Rusty Gibbs 
+#       Homepage:  http://www.wickedidol.com
+#            Git:  https://github.com/fenchurch/dotfiles.git
+#    Description:  user context
+#        Created:  2018-05-05
+#       Modified:  2018-05-05
+# ==============================================================================
+
+#If its the localmachine and defalt user, echo nothing
+#echo user if not default
+#echo "host (ssh)" if ssh client logged into default user
+#echo "user@host (ssh)" if ssh client logged into 
+#iif [[ $DEFUALT_USER == $(whoami) ]]
+#    ${SSH_CLIENT}
+echo
