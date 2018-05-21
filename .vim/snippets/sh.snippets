@@ -4,7 +4,7 @@ snippet #!
 
 snippet header
 	#!/bin/bash
-	__scriptVersion=${1:0.1}
+	__scriptVersion=${1:${VISUAL}}
 	__scriptPID=$$
 	__scriptPath="$(cd "$(realpath "$(dirname "\$0")")"; pwd -P )"
 	__scriptFile="$(basename "\$0")"
@@ -14,8 +14,7 @@ snippet header
 	#         Author:  `g:snips_author` 
 	#       Homepage:  `g:snips_authorsite`
 	#            Git:  `g:snips_authorgit`/${2:repo}.git
-	#    Description:  ${3:functionDescription}
-	#        Created:  `strftime("%Y-%m-%d")`
+	#        Created:  `system('[[ "$(uname)" == Darwin ]] && date -j -f "%m/%d/%Y" "$(GetFileInfo -d '.shellescape(expand('%:p')).')" +%Y-%m-%m 2>&- || date "+%Y-%m-%d"')`
 	#       Modified:  `strftime("%Y-%m-%d")`
 	# ==============================================================================
 	$0
@@ -67,25 +66,24 @@ snippet flags
 	done
 	shift $(( $OPTIND -1 ))
 snippet getopt
-
-	[ -z $(cat) ] && input=1 || input=0
-	while [ ${#@} -gt $input ]; do
+	while true; do
 	    case "$${0:1}" in
 		--help		| -h ) usage; exit 0;;
-		--version	| -V ) echo "$${0:0} -- Version $__scriptVersion"; exit 0;;
-	        --$4		| -$5 ) ${7:flag_actions}; shift;;
+		--version	| -V ) echo "$__scriptFile -- Version $__scriptVersion"; exit 0;;
+	        --$4		| -$5 ) ${6:flag_actions}; shift$7;;
+		* ) break;;
 	    esac
 	done
-	#make either last argument or fd1 
-	input="${${0:1}:-$(cat)}"
-
-	}
+	echo "${$@:-$(</dev/stdin)}" | while read line; do
+	    $0
+	done
 
 snippet fun
-	# ${2:function description}
+	# ${2:function description} {{{
 	${1:function_name}() {
 		${0:# function_body}
 	}
+	#}}}
 snippet select
 	${1:options}=(${2:"option"})
 	select opt in "${$1[@]}"; do

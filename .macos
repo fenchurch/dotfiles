@@ -1,93 +1,17 @@
-echo "!/bin/bash"
-echo "migrate dotfiles to home"
-
+#!/bin/bash"
+echo "Migrating macOS settings..."
 sudo -v
-echo "keep sudo alive"
 while true; do 
     sudo -n true; 
     sleep 60; 
     kill -0 "$$" || exit; 
 done 2>/dev/null &
-echo ""
-echo "#install homebrew"
-echo "ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)""
-echo "#install brew-cask"
-echo "brew doctor"
-echo ""
-echo "brew tap phinze/cask"
-echo "brew install brew-cask"
-echo ""
-echo "# Make sure we’re using the latest Homebrew"
-echo "brew update"
-echo "# Upgrade any already-installed formulae"
-echo "brew upgrade"
-echo "# Install GNU core utilities (those that come with OS X are outdated)"
-echo "# Don’t forget to add `$(brew --prefix coreutils)/libexec/gnubin` to `$PATH`."
-echo "brew install coreutils"
-echo "# Install some other useful utilities like `sponge`"
-echo "brew install moreutils"
-echo "# Install GNU `find`, `locate`, `updatedb`, and `xargs`, g-prefixed"
-echo "brew install findutils"
-echo "# Install Bash 4"
-echo "brew install bash"
-echo ""
-echo "# Install wget with IRI support"
-echo "brew install wget --enable-iri"
-echo ""
-echo "# Install RingoJS and Narwhal"
-echo "# Note that the order in which these are installed is important; see http://git.io/brew-narwhal-ringo."
-echo "brew install ringojs"
-echo "brew install narwhal"
-echo ""
-echo "# Install more recent versions of some OS X tools"
-echo "brew install vim --override-system-vi"
-echo "brew install homebrew/dupes/grep"
-echo "brew install josegonzalez/homebrew-php/php55"
-echo ""
-echo "# This formula didn’t work well last time I tried it:"
-echo "#install homebrew/dupes/screen"
-echo ""
-echo "# Install other useful binaries"
-echo "brew install ack"
-echo "brew install pv"
-echo "#install exiv2"
-echo "brew install git"
-echo "brew install imagemagick --with-webp"
-echo "brew install lynx"
-echo "brew install node"
-echo "brew install pigz"
-echo "brew install rename"
-echo "brew install rhino"
-echo "brew install tree"
-echo "brew install webkit2png"
-echo "brew install zopfli"
-echo "brew install p7zip"
-echo ""
-echo "brew install homebrew/versions/lua52"
-echo ""
-echo "for i in coreutils moreutils findutils bash \"
-echo "   "wget --enable-iri" ringojs narwhal \"
-echo "   "vim --override-system-vi" \"
-echo "   "homebrew/dupes/grep" \"
-echo "   "josegonzalez/homebrew-php/php55" \"
-echo "   ack pv git "imagemagick --with-webp" lynx \"
-echo "   node pigz rename rhino tree webkit2png zopfli p7zip;"
-echo "do"
-echo "   brew install $i"
-echo "done;"
-echo ""
-echo "for i in google-chrome google-chrome-canary totalterminal tor-browser transmission vlc macvim; "
-echo "do"
-echo "   brew cask install "$i" 2> /dev/null"
-echo "done;"
-echo ""
-echo "# Remove outdated versions from the cellar"
-echo "brew cleanup"
 
-chsh -s /bin/zsh $(whoami)
-
-echo "OSX Settings"
-echo "Always show scrollbars"
+################################################################################
+# General {{{
+################################################################################
+echo "# General Settings #" 
+echo "Always showing scrollbars"
 defaults write NSGlobalDomain AppleShowScrollBars -string "Always"
 echo "Expand save panel by default"
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
@@ -105,13 +29,19 @@ echo "Disable Resume system-wide"
 defaults write NSGlobalDomain NSQuitAlwaysKeepsWindows -bool false
 echo "Reveal IP address, hostname, OS version, etc. when clicking the clock in the login window"
 sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
+
 echo "Restart automatically if the computer freezes"
 systemsetup -setrestartfreeze on
+
 echo "Disable smart quotes as they’re annoying when typing code"
 defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
-echo
-echo "#### SSD/Time Machine Settings ####"
-echo
+#############################################################################}}}
+
+################################################################################
+# Disks {{{
+################################################################################
+
+echo "Disk settings"
 echo "Disable local Time Machine snapshots"
 sudo tmutil disablelocal
 echo "Disable hibernation (speeds up entering sleep mode)"

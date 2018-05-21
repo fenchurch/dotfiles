@@ -1,5 +1,5 @@
 #!/bin/bash
-__scriptVersion=0.1
+__scriptVersion=1.0
 __scriptPID=$$
 __scriptPath="$(dirname "$0")"
 __scriptFile="$(basename "$0")"
@@ -11,62 +11,90 @@ __scriptFile="$(basename "$0")"
 #            Git:  https://github.com/fenchurch/dotfiles/bin
 #    Description:  vnc
 #        Created:  2018-04-12
-#       Modified:  2018-04-12
+#       Modified:  2018-05-21
 # ================================================================= 
 
 #Settings
 config=~/.ssh/config
 timeout=1
-ignore=( git wi vw )
-defaultPort=5900
+ignore=( git wi vw firewall torrent nas)
+port=5900
 
 host="${1##*@}"
 cred="${1%@*}"
-if [[ "$host" != "${host%:*}" ]]; then 
-    port=${host%:*}
-    host=${host##*:}
-else
-    port=$defaultPort
-fi
 
-join(){  IFS=$1; shift; echo "$*"; }
-sshHosts(){
-    awk '/Host / { host=$2; }; /Hostname / && host!="" { print host }' $config | grep -Ev $(join '|' ${ignore[*]}) 
+
+join(){
+    IFS="$1"; shift
+    echo "$*"; 
 }
-host(){
-    awk '/Host '$1'$/ { host=1; }; /Hostname / && host==1 { print $2; host=0 }' $config
+
+
+localhosts(){
+   knownHosts | grep -Ev $(join '|' ${ignore[*]}) | testHost
+}
+knownHosts(){
+    awk '/Host / { h=$2; next}
+        /Host / && h!="" { h="" }
+        /User / && h!="" { u=$2 }
+        /Hostname / && h!="" {print h"="u"@"$2}' $config | \
+        grep -Ev $(join '|' ${ignore[*]})
+}
+knownHost(){
+    knownHosts | while read line; do
+        [[ ${line%=*} == $1 ]] && echo ${line#*=}
+    done
+}
+testHost(){
+    while true ; do
+        case "$1" in
+        --port  |   -p ) port=$2; shift 2;;
+        --timeout | -t ) timeout=$2; shift 2;;
+        *) break;;
+        esac
+    done
+    #make either last argument or fd1 
+    echo "${@:-$(</dev/stdin)}" | while read host; do
+        nc -G $timeout -z ${host#*@} $port 2>&- && echo "$host"
+    done
 }
 selectHost(){
     PS3="Select a host (type quit to cancel) : "
-    select opt in `sshHosts`; do
+    select opt in `localhosts | sed -e 's/=.*$//g'`; do
         case $REPLY in
         q|n|quit|cancel|exit)
             exit;;
         * )
-            hostO=$(host $opt)
-            hostR=$(host $REPLY)
+            hostO=$(knownHost $opt)
+            hostR=$(knownHost $REPLY)
             if [[ "$hostO" == "" && "$hostR" == "" ]]; then
                 echo "Invalid answer, try again..."
             elif [[ "$hostO" != "" ]]; then
-                echo "$hostO"
+                host="${hostO#*@}"
+                cred="${hostO%%@*}"
                 break;
             elif [[ "$hostR" != "" ]]; then
-                echo "$hostR"
+                host="${hostR#*@}"
+                cred="${hostR%%@*}"
                 break;
             fi;;
         esac
     done
 }
 main(){
-    [[ "$host" == "" ]] && host=$(selectHost) || sshhost=$(host $host)
-    [[ "$sshhost" != "" ]] && host="$sshhost" || :
+    if [[ "$host" != "${host%:*}" ]]; then 
+        port=${host%:*}
+        host=${host##*:}
+    fi
+    [[ "$host" == "" ]] && selectHost || knownHost=$(knownHost $host)
+    [ -n "$knownHost" ] && host="${knownHost##*@}" && cred="${knownHost%@*}"
     [[ "$cred" == "$host" ]] && cred="" || cred="$cred@"
-
-    if nc -G$timeout -z $host $port 2>&-; then
-        echo "Opening vnc to $host on port $port"
+   
+    if testHost "$host" 1>/dev/null; then
+        echo "Opening vnc to $cred$host on port $port"
         open vnc://"$cred$host:$port"
     else
-        echo -e "\e[31mVNC port ($port) not open on $host\e[30m"
+        echo -e "\033[31mVNC port ($port) not open on $host\033[30m"
         return 1;
     fi
 }

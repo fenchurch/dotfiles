@@ -1,12 +1,34 @@
-#! /bin/bash
-[[ `uname` != "Darwin" ]] && exit;
+#!/bin/bash
+__scriptVersion=1.0
+__scriptPID=$$
+__scriptPath="$(cd "$(realpath "$(dirname "$0")")"; pwd -P )"
+__scriptFile="$(basename "$0")"
 
-state=`osascript -e 'tell application "Spotify" to player state as string'`;
-if [ $state = "playing" ]; then
-    artist=`osascript -e 'tell application "Spotify" to artist of current track as string'`;
-    track=`osascript -e 'tell application "Spotify" to name of current track as string'`;
-    [ -z "$artist" ] && track="(ad)" || artist="$artist - "
-    echo -en "$artist$track";
-else
-    osascript -e 'tell application "iTunes" to if player state is playing then artist of current track & " - " & name of current track'
+# Function ===================================================================== 
+#           Name:  nowplaying
+#         Author:  Rusty Gibbs 
+#       Homepage:  http://www.wickedidol.com
+#            Git:  https://github.com/fenchurch/dotfiles.git
+#    Description:  List current artist - track being played in Spotify or iTunes
+#        Created:  2018-05-15
+#       Modified:  2018-05-15
+# ==============================================================================
+exit
+if [[ `uname` == Darwin ]]; then
+    for app in Spotify iTunes; do
+        playing="$(osascript <<script
+tell application "System Events"
+    if (name of processes) contains "$app" then
+        tell application "$app"
+            if player state is playing and artist of current track is not "" then
+                artist of current track & " - " & name of current track
+            end if
+        end tell
+    end if
+end tell
+script
+        )"
+        [[ -n "$playing" ]] && echo "$playing" && exit
+    done
 fi
+
