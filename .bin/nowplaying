@@ -1,9 +1,8 @@
 #!/bin/bash
 __scriptVersion=1.0
 __scriptPID=$$
-__scriptPath="$(cd "$(realpath "$(dirname "$0")")"; pwd -P )"
+__scriptPath="$(cd "$(dirname "$0")"; pwd -P )"
 __scriptFile="$(basename "$0")"
-
 # Function ===================================================================== 
 #           Name:  nowplaying
 #         Author:  Rusty Gibbs 
@@ -13,22 +12,30 @@ __scriptFile="$(basename "$0")"
 #        Created:  2018-05-15
 #       Modified:  2018-05-15
 # ==============================================================================
-exit
 if [[ `uname` == Darwin ]]; then
     for app in Spotify iTunes; do
-        playing="$(osascript <<script
+        playing="$(osascript 2>/dev/null <<script
 tell application "System Events"
     if (name of processes) contains "$app" then
         tell application "$app"
-            if player state is playing and artist of current track is not "" then
-                artist of current track & " - " & name of current track
+            if player state is playing then
+                if artist of current track is not "" then
+                    artist of current track & " - " & name of current track
+                end if
             end if
         end tell
     end if
 end tell
 script
         )"
-        [[ -n "$playing" ]] && echo "$playing" && exit
-    done
+        [ -n "$playing" ] && echo "$playing" && exit 0 
+    done;
+    exit 0
 fi
+exit 0
 
+#        tell application "$app"
+#            if player state is playing and artist of current track is not "" then
+#                artist of current track & " - " & name of current track
+#            end if
+#        end tell

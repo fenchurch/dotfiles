@@ -1,23 +1,89 @@
 # #!/bin/bash
 snippet #!
 	#!/bin/bash
-
 snippet header
 	#!/bin/bash
-	__scriptVersion=${1:${VISUAL}}
+	__scriptVersion=${1:1.0}
 	__scriptPID=$$
-	__scriptPath="$(cd "$(realpath "$(dirname "\$0")")"; pwd -P )"
+	__scriptPath="$(cd "$(dirname "\$0")"; pwd -P )"
 	__scriptFile="$(basename "\$0")"
 
 	# Function ===================================================================== 
 	#           Name:  `expand('%')`
 	#         Author:  `g:snips_author` 
 	#       Homepage:  `g:snips_authorsite`
-	#            Git:  `g:snips_authorgit`/${2:repo}.git
+	#            Git:  `g:snips_authorgit`/`system('git=$(git rev-parse --show-toplevel) && basename "$git" || echo \$\{1:repo\}')`.git
 	#        Created:  `system('[[ "$(uname)" == Darwin ]] && date -j -f "%m/%d/%Y" "$(GetFileInfo -d '.shellescape(expand('%:p')).')" +%Y-%m-%m 2>&- || date "+%Y-%m-%d"')`
 	#       Modified:  `strftime("%Y-%m-%d")`
 	# ==============================================================================
+	usage="usage:
+	    $__scriptFile ${2:arguments} <input>"
+	# default vars =============================================================={{{
+
+	# ===========================================================================}}}
+	main(){
+	    ${7}
+	}
+	while true; do
+	    case "\$1" in
+		--help		| -h ) usage; exit 0;;
+		--version	| -V ) echo "$__scriptFile -- Version $__scriptVersion"; exit 0;;
+		--${3:flag}		| -${4:f} ) ${5:flag_actions}; shift ${6:1};;
+		* ) break;;
+	    esac
+	done
+	if [[ -t 0 && $# -eq 0 ]]; then
+	    echo "$usage"
+	    exit 1
+	fi
+	echo "${@:-$(</dev/stdin)}" | while read line; do
+	    main "$line"
+	done
+snippet [
+	[ ${1:} ]
+	#    -e file exists
+	#    -f regular file
+	#    -s size > 0
+	#    -d directory
+	#    -b block special e.g. /dev/sda2
+	#    -c character special e.g /dev/tty0
+	#    -p pipe e.g. /dev/fd/0
+	#    -h|L sybolic link
+	#    -S socket
+	#    -t fd open with term device. Test wheter stdin or stdout of a script
+	#    -r readable
+	#    -w writable
+	#    -x executable
+	#    -g group-id set same owner as directory
+	#    -G owned by my group
+	#    -u user-id set
+	#    -O owned by me
+	#    -k sticky bit
+	#    -N mod since last read
+	#    file1 -nt file2 newer than
+	#    file1 -ot file2 older than
+	#    file1 -ef file2 hardlinks to same
+	#    -v varname has been assigned value
+	#    -R varname is name ref
+	#    -z string zero length
+	#    -n string not zero length
+snippet ${
+	${${1:}}
+	#	${param#delete_beggining_word} 
+	#	${param%delete_ending_word}
+	#	${param:offset:length}
+	#	${param:-substitute_if_unset}
+	#	${param:=assigned_if_unset}
+	#	${param:?stderr_if_unset}
+	#	${param:+expand_word_if_set}
+	#	${!prefix*} ${!prefix@} expand vars that with prefix, @=doublequoated
+	#	${!array[@|*]} expand array keys
+	#	${#str|array_length}
+	#	${param/pat/string/} "#" matches beginning "%" ending
+snippet section
+	# ${1:Section} ==========================================================================={{{
 	$0
+	# ===========================================================================}}}
 snippet if
 	if [[ ${1:condition} ]]; then
 		${2:#statements}
@@ -67,23 +133,29 @@ snippet flags
 	shift $(( $OPTIND -1 ))
 snippet getopt
 	while true; do
-	    case "$${0:1}" in
+	    case "$${1:1}" in
 		--help		| -h ) usage; exit 0;;
 		--version	| -V ) echo "$__scriptFile -- Version $__scriptVersion"; exit 0;;
-	        --$4		| -$5 ) ${6:flag_actions}; shift$7;;
+		--${2:flag}		| -${3:f} ) ${4:flag_actions}; shift ${5:1};;
 		* ) break;;
 	    esac
 	done
-	echo "${$@:-$(</dev/stdin)}" | while read line; do
+	if [[ -t 0 && $# -eq 0 ]]; then
+	    echo "$usage"
+	    exit 1
+	fi
+	echo "${@:-$(</dev/stdin)}" | while read line; do
 	    $0
 	done
 
 snippet fun
-	# ${2:function description} {{{
-	${1:function_name}() {
+	# ${1:function_name} ===========================================================================
+	# ${2:function_description}
+	#=======================================================================
+	$1() {
 		${0:# function_body}
 	}
-	#}}}
+
 snippet select
 	${1:options}=(${2:"option"})
 	select opt in "${$1[@]}"; do
@@ -102,4 +174,5 @@ snippet select
 		    fi;;
 	    esac
 	done
-
+snippet alias
+	shopt -s expand_aliases

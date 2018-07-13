@@ -1,7 +1,7 @@
 #!/bin/bash
 __scriptVersion=1.0
 __scriptPID=$$
-__scriptPath="$(cd "$(realpath "$(dirname "$0")")"; pwd -P )"
+__scriptPath="$(cd "$(dirname "$0")"; pwd -P )"
 __scriptFile="$(basename "$0")"
 
 # Function ===================================================================== 
@@ -20,4 +20,11 @@ __scriptFile="$(basename "$0")"
 #echo "user@host (ssh)" if ssh client logged into 
 #iif [[ $DEFUALT_USER == $(whoami) ]]
 #    ${SSH_CLIENT}
-echo
+if [[ $SSH_CLIENT == "" ]]; then
+    if [[ "$DEFAULT_USER" != "$(whoami)" ]]; then
+        whoami
+    fi
+else
+    echo "$(whoami)@${SSH_CLIENT//(^.*)\ .*$/\1}"
+fi
+#echo

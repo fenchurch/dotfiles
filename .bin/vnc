@@ -16,7 +16,7 @@ __scriptFile="$(basename "$0")"
 
 #Settings
 config=~/.ssh/config
-timeout=1
+timeout=2
 ignore=( git wi vw firewall torrent nas)
 port=5900
 

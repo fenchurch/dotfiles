@@ -7,7 +7,7 @@ pwd;
 files=( .colors .vim .vimrc .bash .bashrc .bash_profile .zsh .zshrc .functions .aliases .bin .profile )
 for file in "${files[@]}"; do
     echo "Linking $file to $HOME";
-#    ln -fs "$scriptPath/$file" "$HOME"
+    ln -fs "$scriptPath/$file" "$HOME"
 done
 #OS dependent installers and settings
 if [[ `uname` == "Darwin" ]]; then
