@@ -1,0 +1,23 @@
+#!/bin/bash
+source ./conf
+pid=/tmp/tunnel.pid
+
+open_tunnel(){
+    ssh -N -D ${TUNNEL_PORT} "${TUNNEL_HOST}" &
+    echo $! > $pid
+    echo "SSH tunnel started to $TUNNEL_HOST on port $TUNNEL_PORT ($(cat $pid))" 
+    networksetup -setsocksfirewallproxy "$TUNNEL_NIC" localhost $TUNNEL_PORT
+    echo "Socks Proxy started to $TUNNEL_NIC on port $TUNNEL_PORT"
+}
+close_tunnel(){
+    echo "Killing SSH Tunnel ($(cat $pid))"
+    kill $(cat $pid)
+    echo "Turning off Socks Proxy on $TUNNEL_NIC"
+    networksetup -setsocksfirewallproxystate "$TUNNEL_NIC" off 
+}
+
+if [[ -e /tmp/tunnel.pid ]]; then
+    close_tunnel
+    exit
+fi
+open_tunnel

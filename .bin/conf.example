@@ -1,0 +1,9 @@
+#remove the .example from file when installing
+#
+#tunnel script
+#computer hosting the tunnel
+TUNNEL_HOST=
+#nic on workstation to create socks proxy on
+TUNNEL_NIC="Ethernet"
+#port to create the proxy with
+TUNNEL_PORT=9001
