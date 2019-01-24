@@ -39,15 +39,15 @@ else
             q | quit | cancel | exit | n ) 
                 exit
                 ;;
-            ''|[!0-9]   ) 
+            '' ) 
                 echo Invalid answer, try again
                 ;;
             [0-9]       ) 
-                [ $REPLY -ge ${#disks[@]} ] &&\
+                [ $REPLY -gt ${#disks[@]} ] &&\
                     echo Invalid answer, try again ||\
                     diskSelected="$opt" && break
                 ;;
         esac
     done
 fi
-sudo "$app/Contents/Resources/createinstallmedia" --volume "$diskSelected"
+sudo "$app/Contents/Resources/createinstallmedia" --volume "$diskSelected" --applicationpath "$app"

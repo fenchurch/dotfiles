@@ -16,8 +16,8 @@ __scriptFile="$(basename "$0")"
 
 #Settings
 config=~/.ssh/config
-timeout=2
-ignore=( git wi vw firewall torrent nas)
+timeout=5
+ignore=( git wi vw firewall torrent nas sonarr)
 port=5900
 
 host="${1##*@}"
@@ -54,9 +54,12 @@ testHost(){
         esac
     done
     #make either last argument or fd1 
+    echo -n "Testing hosts " >&2
     echo "${@:-$(</dev/stdin)}" | while read host; do
+        echo -n "." >&2
         nc -G $timeout -z ${host#*@} $port 2>&- && echo "$host"
     done
+    echo "" >&2
 }
 selectHost(){
     PS3="Select a host (type quit to cancel) : "

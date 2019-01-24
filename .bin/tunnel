@@ -1,23 +1,51 @@
 #!/bin/bash
+[[ -x ./conf ]] && error "Config file (./conf) doesnt exist"
 source ./conf
 pid=/tmp/tunnel.pid
 
+error(){ echo $@ >&2 && exit 1; }
+
 open_tunnel(){
-    ssh -N -D ${TUNNEL_PORT} "${TUNNEL_HOST}" &
+    #open tunnel and start logging
+    ssh -N -D ${TUNNEL_PORT} "${TUNNEL_HOST}" > ~/Library/logs/tunnel.log &
+    #store pid
     echo $! > $pid
+    #disown it so kill doesnt alert when the process ends
+    disown
     echo "SSH tunnel started to $TUNNEL_HOST on port $TUNNEL_PORT ($(cat $pid))" 
+    #start the socks proxy
     networksetup -setsocksfirewallproxy "$TUNNEL_NIC" localhost $TUNNEL_PORT
-    echo "Socks Proxy started to $TUNNEL_NIC on port $TUNNEL_PORT"
+    exitcode=$?
+    #error and close if it threw
+    if [ $exitcode -gt 0 ]; then
+        echo "There was an error connecting the socks proxy" && close_tunnel
+    else
+        echo "Socks Proxy started to $TUNNEL_NIC on port $TUNNEL_PORT"
+    fi
 }
 close_tunnel(){
+    #kill the tunnel process. remove pid file. turn socks off. exit
     echo "Killing SSH Tunnel ($(cat $pid))"
-    kill $(cat $pid)
+    kill $(cat $pid) 2>/dev/null
+    rm $pid
+
     echo "Turning off Socks Proxy on $TUNNEL_NIC"
     networksetup -setsocksfirewallproxystate "$TUNNEL_NIC" off 
+    exit
 }
 
-if [[ -e /tmp/tunnel.pid ]]; then
-    close_tunnel
-    exit
-fi
-open_tunnel
+main(){
+    #check variables
+    for var in HOST PORT NIC; do
+       v=TUNNEL_$var
+       [[ "${!v}" == "" ]] && error "$v not defined in ./conf"
+    done
+
+    #if tunnel open, close it and end
+    if [[ -e /tmp/tunnel.pid ]]; then
+        close_tunnel
+    fi
+
+    open_tunnel
+}
+main
