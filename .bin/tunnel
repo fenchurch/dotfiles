@@ -1,9 +1,46 @@
 #!/bin/bash
-[[ -x ./conf ]] && error "Config file (./conf) doesnt exist"
-source ./conf
+__scriptVersion=1.0
+__scriptPID=$$
+__scriptPath="$(cd "$(dirname "$0")"; pwd -P )"
+__scriptFile="$(basename "$0")"
+
+# Function ===================================================================== 
+#           Name:  tunnel
+#         Author:  Rusty Gibbs 
+#       Homepage:  http://www.wickedidol.com
+#            Git:  https://github.com/fenchurch/dotfiles.git
+#        Created:  2019-01-01
+#       Modified:  2019-01-24
+# ==============================================================================
+usage="usage:
+    $__scriptFile 
+    "
+# default vars =============================================================={{{
+
+# ===========================================================================}}}
+conf="$__scriptPath/conf"
+[[ -x "$conf" ]] && error "Config file (./conf) doesnt exist"
+source "$conf"
 pid=/tmp/tunnel.pid
 
 error(){ echo $@ >&2 && exit 1; }
+
+main(){
+    #check variables
+    for var in HOST PORT NIC; do
+       v=TUNNEL_$var
+       [[ "${!v}" == "" ]] && error "$v not defined in ./conf"
+    done
+
+    #if tunnel open, close it and end
+    if [[ -e /tmp/tunnel.pid ]]; then
+        close_tunnel
+    fi
+
+    open_tunnel
+}
+
+
 
 open_tunnel(){
     #open tunnel and start logging
@@ -34,18 +71,15 @@ close_tunnel(){
     exit
 }
 
-main(){
-    #check variables
-    for var in HOST PORT NIC; do
-       v=TUNNEL_$var
-       [[ "${!v}" == "" ]] && error "$v not defined in ./conf"
-    done
+while true; do
+    case "$1" in
+    --help      | -h ) usage; exit 0;;
+    --version   | -V ) echo "$__scriptFile -- Version $__scriptVersion"; exit 0;;
+    --networkadapter| -n ) TUNNEL_NIC=$2; shift 2;;
+    --ssh_server    | -s ) TUNNEL_HOST=$2; shift 2;;
+    --port          | -p ) TUNNEL_PORT=$2; shift 2;;
+    * ) break;;
+    esac
+done
 
-    #if tunnel open, close it and end
-    if [[ -e /tmp/tunnel.pid ]]; then
-        close_tunnel
-    fi
-
-    open_tunnel
-}
 main

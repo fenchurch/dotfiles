@@ -14,6 +14,8 @@ __scriptFile="$(basename "0")"
 #        Created:   2018-04-11
 #       Modified:   2018-04-11
 # ================================================================= 
+source $__scriptPath/conf
+
 
 
 app="${1:-/Applications/Install MacOS High Sierra.app}"
@@ -50,4 +52,9 @@ else
         esac
     done
 fi
-sudo "$app/Contents/Resources/createinstallmedia" --volume "$diskSelected" --applicationpath "$app"
+if [[ `/usr/libexec/PlistBuddy -c "print ::CFBundleShortVersionString" "$app"/Contents/Info.plist | cut -d . -f1` -ge 14 ]]; then
+    sudo "$app/Contents/Resources/createinstallmedia" --volume "$diskSelected"
+else
+    sudo "$app/Contents/Resources/createinstallmedia" --volume "$diskSelected" --applicationpath "$app"
+fi
+

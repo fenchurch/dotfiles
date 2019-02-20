@@ -3,10 +3,13 @@ snippet #!
 	#!/bin/bash
 snippet header
 	#!/bin/bash
-	__scriptVersion=${1:1.0}
-	__scriptPID=$$
-	__scriptPath="$(cd "$(dirname "\$0")"; pwd -P )"
-	__scriptFile="$(basename "\$0")"
+
+	set -o errexit
+	set -o pipefail
+	__Version=0.1
+	__PID=$$
+	__Path="$(cd "$(dirname "\$0")"; pwd -P )"
+	__File="$(basename "\$0")"
 
 	# Function ===================================================================== 
 	#           Name:  `expand('%')`
@@ -16,29 +19,58 @@ snippet header
 	#        Created:  `system('[[ "$(uname)" == Darwin ]] && date -j -f "%m/%d/%Y" "$(GetFileInfo -d '.shellescape(expand('%:p')).')" +%Y-%m-%m 2>&- || date "+%Y-%m-%d"')`
 	#       Modified:  `strftime("%Y-%m-%d")`
 	# ==============================================================================
-	usage="usage:
-	    $__scriptFile ${2:arguments} <input>"
+
+	# help/man =================================================================={{{
+	usage="`expand('%')` [-flags] <input>"
+	man="NAME
+	    `expand('%')` -- short function description
+
+	SYNOPSIS
+	    $usage
+
+	DESCRIPTION
+	    `expand('%')` longer function description
+
+	    -f	flag_argument_type
+	    --flag	flag desciption
+	"
+	# ===========================================================================}}}
 	# default vars =============================================================={{{
 
 	# ===========================================================================}}}
-	main(){
-	    ${7}
+    	# `expand('%')` =============================================================={{{
+	`expand('%')`(){
+	    __Args=("$@")
+	    main
 	}
+	# ===========================================================================}}}
+
+
+	# main runtime =============================================================={{{
+	main(){
+	}	
+	# ===========================================================================}}}
+
+	# runtime ===o================================================================{{{
+	__scriptArgs=("$@")
 	while true; do
-	    case "\$1" in
-		--help		| -h ) usage; exit 0;;
+	    case "${__scriptArgs[1]}" in
+		--help		| -h ) echo "$man"; exit 0;;
 		--version	| -V ) echo "$__scriptFile -- Version $__scriptVersion"; exit 0;;
-		--${3:flag}		| -${4:f} ) ${5:flag_actions}; shift ${6:1};;
+		--flag		| -f ) flag_action="";;
+		--set_var	| -s ) var="\$__scriptArgs[2]"; unset __scriptArgs[2];; 
 		* ) break;;
 	    esac
+	   unset __scriptArgs[1]; 
 	done
 	if [[ -t 0 && $# -eq 0 ]]; then
-	    echo "$usage"
+	    echo "usge: $'\n'$'\t'$usage"
 	    exit 1
 	fi
 	echo "${@:-$(</dev/stdin)}" | while read line; do
 	    main "$line"
 	done
+	# ===========================================================================}}}
 snippet [
 	[ ${1:} ]
 	#    -e file exists

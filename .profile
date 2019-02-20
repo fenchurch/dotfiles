@@ -5,4 +5,4 @@ sourceFiles=(
 for src in ${sourceFiles[@]}; do 
     [ -e ~/$src ] && source ~/$src || :
 done
-PATH="$PATH:$HOME/.bin:$HOME/bin"
+PATH="$PATH:$HOME/.bin:$HOME/bin:$HOME/.rbenv/bin"

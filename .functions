@@ -51,13 +51,28 @@ if [[ `uname` == Darwin ]]; then
             fi
         fi
     }
-
+    #renew DHCP lease
     renewdhcp(){
         if sudo networksetup -setbootp "${1:-Ethernet}"; then 
             sudo networksetup -setdhcp "${1:-Ethernet}"
         fi
     }
-    # ql:           Opens any file in MacOS Quicklook Preview
+    # MacOS Quicklook Preview
     ql () {  qlmanage -p "$@" >& /dev/null; }
+
+    # Dropbox backlink a file. Kill Dropbox, Copy, remove original, link Copy to original dropbox location, start Dropbox
+    dropboxlink(){
+        destination="$1"
+        sourcefile="$2"
+        killall -v Dropbox 1>&-
+        [[ ! -d "$destination" ]] && mkdir "$destination"
+
+        cp -R "$sourcefile" "$destination" &&\
+        rm -r "$sourcefile" &&\
+        ln -s "$destination/$(basename "$sourcefile")" "$(dirname "$sourcefile")"
+        
+        open -a Dropbox
+    }
 fi
+
 

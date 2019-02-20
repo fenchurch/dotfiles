@@ -29,9 +29,9 @@ function! Quote_comment()
     let g:Comment="\""
     let g:EndComment=""
 endfunction
-"function ! CheckFirstLine()
-"
-"endfunction
+function! CheckFirstLine()
+
+endfunction
 augroup filetypedetect
     "default    
     au BufRead,BufNewFile * call Pound_comment() 
@@ -98,7 +98,6 @@ augroup filetypedetect
     au FileType c,cpp,css, call SlashStar_comment()
     au FileType html,smarty,stata,xml,plist call Tag_comment()
     au FileType vim call Quote_comment()
-    au FileType conf call CheckFirstLine()
     au BufRead,BufNewFile */.functions,*/.aliases,*/.bash* set ft=sh
     au BufRead,BufNewFile * call IsReadOnly()
 

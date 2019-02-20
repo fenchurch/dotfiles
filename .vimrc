@@ -55,6 +55,7 @@ set statusline=%F%m%r%h%w\ (%{&ff}){%Y}\ [%l,%v][%p%%]
 set clipboard=unnamed                           " Yank to system clipboard
 
 set splitbelow splitright                       "Split open location
+set visualbell t_vb=                            "No bell
 " ---------------------------------------------------------------------------}}}
 "    Folding                                                               {{{
 " ----------------------------------------------------------------------------
@@ -97,6 +98,8 @@ nmap <D-P> ^v$y<esc>Pj
 nmap <C-P> <D-P>
 nmap <D-V> <D-P>
 nmap <C-V> <D-P>
+"Dont overwrite the register when pasting over
+xnoremap p pgvy 
 "map command left and right for nongui
 nmap <Char-0x01> ^
 nmap <Char-0x05> $
