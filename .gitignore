@@ -3,7 +3,7 @@ conf
 .bash_history
 .history
 .viminfo
-.vim/.netrwhist
+.netrwhist
 .vim/bundle/*
 *.swp
 .*.swp
