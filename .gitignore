@@ -1,5 +1,6 @@
 conf
 .ssh
+.bash_history
 .history
 .viminfo
 .vim/.netrwhist
