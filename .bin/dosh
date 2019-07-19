@@ -1,0 +1,5 @@
+#!/bin/bash
+container=$1
+shift
+command=$@
+sudo docker exec -it $container $command
