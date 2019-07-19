@@ -85,5 +85,3 @@ setopt extended_glob
 
 #source .profile 
 source ~/.profile
-
-eval "$(rbenv init -)"

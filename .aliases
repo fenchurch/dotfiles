@@ -43,4 +43,9 @@ if [[ `uname` == "Darwin" ]]; then
     alias sys='syslog | tail -f'
     alias btmm='echo show Setup:/Network/BackToMyMac | scutil | grep $(id -u)\ : | sed "s/.*$(id -u) : \([0-9a-zA-Z\.]*\)\.$/\1/g"'
     alias tm='sudo fs_usage -f filesys backupd'
+    alias restartChannel48="ssh channel48 'killall -v Media\ Sign\ Pro
+        open ~/documents/Project\ UMS-2.msp
+        sleep 10
+        osascript -e \"tell application \\\"System Events\\\" to keystroke \\\"p\\\" using option down\"
+        '"
 fi

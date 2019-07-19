@@ -1,4 +1,11 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_cnt =9
 let g:netrw_dirhist_1='/Users/rusty/Dropbox/scripts/TimeLapse'
 let g:netrw_dirhist_2='/Users/rusty/Dropbox/scripts/TimeLapse/lib'
+let g:netrw_dirhist_3='/Users/rusty/Dropbox/dotfiles/install'
+let g:netrw_dirhist_4='/Users/rusty/Dropbox/dotfiles'
+let g:netrw_dirhist_5='/Users/rusty/Dropbox/scripts/TimeLapse'
+let g:netrw_dirhist_6='/Users/rusty/Dropbox/scripts/TimeLapse/lib'
+let g:netrw_dirhist_7='/Users/rusty/test'
+let g:netrw_dirhist_8='/Users/rusty/Dropbox/ruby/ghost'
+let g:netrw_dirhist_9='/Users/rusty/Dropbox/ruby/ghost/lib'

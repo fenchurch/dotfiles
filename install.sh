@@ -4,7 +4,7 @@ scriptPID=$$
 scriptName="$(basename "$0")"
 scriptPath="$( cd "$(dirname "$0")"; pwd -P )"
 pwd;
-files=( .colors .vim .vimrc .bash .bashrc .bash_profile .zsh .zshrc .functions .aliases .bin .profile )
+files=( .colors .vim .vimrc .bashrc .bash_profile .zsh .zshrc .functions .aliases .bin .profile )
 for file in "${files[@]}"; do
     echo "Linking $file to $HOME";
     ln -fs "$scriptPath/$file" "$HOME"
