@@ -25,6 +25,6 @@ if [[ $SSH_CLIENT == "" ]]; then
         whoami
     fi
 else
-    echo "$(whoami)@${SSH_CLIENT//(^.*)\ .*$/\1}"
+    echo "$(whoami)@${SSH_CLIENT%% *}"
 fi
 #echo

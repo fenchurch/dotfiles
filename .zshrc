@@ -30,7 +30,7 @@ POWERLEVEL9K_CUSTOM_NOW_PLAYING='~/.bin/nowplaying'
 POWERLEVEL9K_CUSTOM_NOW_PLAYING_FOREGROUND='012'
 POWERLEVEL9K_CUSTOM_NOW_PLAYING_BACKGROUND='000'
 
-POWERLEVEL9K_CUSTOM_CONTEXT=''
+#POWERLEVEL9K_CUSTOM_CONTEXT=''
 POWERLEVEL9K_CUSTOM_CONTEXT_FOREGROUND='014'
 POWERLEVEL9K_CUSTOM_CONTEXT_BACKGROUND='000'
 
@@ -55,7 +55,7 @@ POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%F{010}\u276f%f%k "
 #Comment this out to disable weekly auto-update checks
 DISABLE_AUTO_UPDATE="true"
 # disable colors in ls
-# DISABLE_LS_COLORS="true"
+DISABLE_LS_COLORS="false"
 # disable autosetting terminal title.
 # DISABLE_AUTO_TITLE="true"
 # red dots to be displayed while waiting for completion
@@ -85,5 +85,3 @@ setopt extended_glob
 
 #source .profile 
 source ~/.profile
-
-eval "$(rbenv init -)"

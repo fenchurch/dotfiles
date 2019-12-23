@@ -10,7 +10,7 @@ filetype off
 "
 "vundle bundles
 set rtp+=~/.vim/bundle/Vundle.vim
-source ~/.vim/vundle.vim
+"source ~/.vim/vundle.vim
 
 filetype on
 filetype plugin on

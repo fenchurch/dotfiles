@@ -1,5 +1,5 @@
 alias s='sudo !!'
-alias ls='ls -Ga'
+alias ls='ls -a --color=tty'
 alias ll='ls -FlAhp'                       # Preferred 'ls' implementation
 alias l='ll'
 alias la='ll -@'                            # Show XAttrs
@@ -44,3 +44,4 @@ if [[ `uname` == "Darwin" ]]; then
     alias btmm='echo show Setup:/Network/BackToMyMac | scutil | grep $(id -u)\ : | sed "s/.*$(id -u) : \([0-9a-zA-Z\.]*\)\.$/\1/g"'
     alias tm='sudo fs_usage -f filesys backupd'
 fi
+alias docker='sudo /usr/bin/docker'
