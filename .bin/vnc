@@ -16,7 +16,7 @@ __scriptFile="$(basename "$0")"
 
 #Settings
 config=~/.ssh/config
-timeout=5
+timeout=1
 ignore=( git wi vw firewall torrent nas sonarr)
 port=5900
 
@@ -28,23 +28,27 @@ join(){
     IFS="$1"; shift
     echo "$*"; 
 }
-
-
-localhosts(){
-   knownHosts | grep -Ev $(join '|' ${ignore[*]}) | testHost
+array_value(){
+    key=$1; shift
+    echo "$*" | while read line; do 
+        if [[ ${line%=*} == $key ]]; then
+            echo ${line#*=}
+            return
+        fi
+    done
 }
+
 knownHosts(){
     awk '/Host / { h=$2; next}
         /Host / && h!="" { h="" }
-        /User / && h!="" { u=$2 }
-        /Hostname / && h!="" {print h"="u"@"$2}' $config | \
+        /User/ && h!="" { u=$2 }
+        /Hostname/ && h!="" {print h"="u"@"$2}' $config | \
         grep -Ev $(join '|' ${ignore[*]})
 }
 knownHost(){
-    knownHosts | while read line; do
-        [[ ${line%=*} == $1 ]] && echo ${line#*=}
-    done
+    array_value "$1" "$(knownHosts)"
 }
+
 testHost(){
     while true ; do
         case "$1" in

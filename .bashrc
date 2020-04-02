@@ -11,8 +11,3 @@ ro(){ [ ! -w "$(pwd)" ] && printf "$RED [ro]$RE" || :; }
 
 export PS1="\n$GRN\u$RE$SSH@\h:$BLD\e[3m\w$RE\$(ro) \n> ";
 export PS2=">> "
-
-export WMSJAVA_HOME="/Library/WowzaStreamingEngine-4.7.6/java"
-export EDITOR="code --wait"
-export EDITOR="code --wait"
-export EDITOR="code --wait"

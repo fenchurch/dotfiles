@@ -38,13 +38,6 @@ snippet header
 	# default vars =============================================================={{{
 
 	# ===========================================================================}}}
-    	# `expand('%')` =============================================================={{{
-	`expand('%')`(){
-	    __Args=("$@")
-	    main
-	}
-	# ===========================================================================}}}
-
 
 	# main runtime =============================================================={{{
 	main(){
@@ -53,7 +46,7 @@ snippet header
 
 	# runtime ===o================================================================{{{
 	__scriptArgs=("$@")
-	while true; do
+	while :; do
 	    case "${__scriptArgs[1]}" in
 		--help		| -h ) echo "$man"; exit 0;;
 		--version	| -V ) echo "$__scriptFile -- Version $__scriptVersion"; exit 0;;
@@ -208,3 +201,6 @@ snippet select
 	done
 snippet alias
 	shopt -s expand_aliases
+
+snippet log
+	echo $1 >&2
